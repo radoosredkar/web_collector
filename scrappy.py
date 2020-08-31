@@ -6,6 +6,7 @@ from models import HomesModel
 from db import Sesson
 import bs4
 from bs4 import BeautifulSoup
+from datetime import datetime
 
 # import sentry_sdk
 # sentry_sdk.init("https://007e055e5fe64e35b55b36140bf6b18d@o371271.ingest.sentry.io/5363923")
@@ -17,11 +18,11 @@ def db_add(item):
     web_id = item.web_id
     price = float(item.price.replace("€", "").replace(".", "").replace(",", "."))
     source = item.source
-    # date_created = datetime.datetime.fromtimestamp(item.date_created)
+    date_created = item.date_created
     homesModel: HomesModel = HomesModel(
         title=title,
         description=desc,
-        date_created=None,
+        date_created=date_created,
         web_id=web_id,
         price=price,
         source=source,
@@ -60,6 +61,10 @@ class ExtractorDesc(object):
 
                 elif self.attr == "price":
                     instance.__setattr__(self.attr, " ".join(item.text.split()))
+                elif self.attr == "date_created":
+                    instance.__setattr__(
+                        self.attr, datetime.strptime(item.text, "%d.%m.%Y.")
+                    )
                 else:
                     instance.__setattr__(self.attr, " ".join(item.text.split()))
                 return instance.__getattribute__(self.attr)
@@ -84,7 +89,7 @@ class Parser:
 
 def scrapp():
     new_items = 0
-    for pageNum in range(1, 10):
+    for pageNum in range(1, 100):
         print(f"parsing page {pageNum}")
         page: requests.models.Response = requests.get(url_bolha.format(page=pageNum))
         soup: bs4.BeautifulSoup = BeautifulSoup(page.content, "html.parser")
