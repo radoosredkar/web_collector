@@ -40,6 +40,8 @@ def db_add(item):
 
 url_bolha = "https://www.bolha.com/index.php?ctl=search_ads&keywords=stanovanja&categoryId=9580&price[min]=98000&price[max]=140999&level0LocationId%5B26320%5D=26320&sort=new&page={page}"
 
+url_nepremicnine = "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-okolica/stanovanje/cena-od-100000-do-150000-eur,velikost-od-50-do-100-m2/{page}/"
+
 
 class ExtractorDesc(object):
     item = None
@@ -70,6 +72,29 @@ class ExtractorDesc(object):
                 return instance.__getattribute__(self.attr)
 
 
+class ExtractorDescNepremicnine(object):
+    item = None
+    """A data descriptor that extracts data from BeautifulSoup item"""
+
+    def __init__(self, attr, class_):
+        self.attr = attr
+        self.class_ = class_
+
+    def __get__(self, instance, owner):
+        if instance.item:
+            item = instance.item.find(class_=self.class_)
+            if item:
+                if self.attr == "price":
+                    instance.__setattr__(self.attr, (item.text.split()[0]))
+                elif self.attr == "date_created":
+                    instance.__setattr__(
+                        self.attr, datetime.strptime(item.text, "%d.%m.%Y.")
+                    )
+                else:
+                    instance.__setattr__(self.attr, " ".join(item.text.split()))
+                return instance.__getattribute__(self.attr)
+
+
 class Parser:
     title = ExtractorDesc("title", "entity-title")
     desc = ExtractorDesc("decs", "entity-description-main")
@@ -78,6 +103,23 @@ class Parser:
     currency = ExtractorDesc("currency", "currency")
     web_id = ExtractorDesc("web_id", "entity-title")
     source = "Bolha"
+
+    def __init__(self, item):
+        self.__dict__["item"] = item
+
+    def __setattr(self, attr, val):
+        if attr == "title":
+            self.title.item = self.item
+
+
+class ParserNepremicnine:
+    title = ExtractorDescNepremicnine("title", "title")
+    desc = ExtractorDescNepremicnine("decs", "kratek")
+    date_created = ExtractorDescNepremicnine("date_created", "date date--full")
+    price = ExtractorDescNepremicnine("price", "cena")
+    currency = ExtractorDescNepremicnine("currency", "currency")
+    web_id = ExtractorDescNepremicnine("web_id", "oglas_container")
+    source = "Nepremicnine"
 
     def __init__(self, item):
         self.__dict__["item"] = item
@@ -112,7 +154,36 @@ def scrapp():
             break
 
 
+def scrappNepremicnine():
+    new_items = 0
+    for pageNum in range(1, 10):
+        print(f"parsing page {pageNum}")
+        page: requests.models.Response = requests.get(
+            url_nepremicnine.format(page=pageNum)
+        )
+        print(url_nepremicnine.format(page=pageNum))
+        soup: bs4.BeautifulSoup = BeautifulSoup(page.content, "html.parser")
+        all_items = soup.find_all(class_="oglas_container")
+        if not all_items:
+            break
+        print(f"{len(all_items)} items found")
+        for item in all_items:
+            parser: ParserNepremicnine = ParserNepremicnine(item)
+            if parser.title and parser.desc:
+                parser.web_id = item["id"]
+                # print("title", parser.title)
+                # print("desc", parser.desc)
+                # print("date", parser.date_created)
+                # print("price", parser.price)
+                # print("web_id", parser.web_id)
+                if db_add(parser):
+                   new_items += 1
+    print(f"Commiting to db {new_items} new items")
+
+
 sesson = Sesson()
 if __name__ == "__main__":
     scrapp()
+    sesson.commit()
+    scrappNepremicnine()
     sesson.commit()
