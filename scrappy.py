@@ -183,7 +183,9 @@ def scrappNepremicnine():
 
 sesson = Sesson()
 if __name__ == "__main__":
+    print("PARSING BOLHA.COM")
     scrapp()
     sesson.commit()
+    print("PARSING NEPREMICNINE.NET")
     scrappNepremicnine()
     sesson.commit()
