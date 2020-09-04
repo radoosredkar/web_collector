@@ -19,6 +19,8 @@ class Query(graphene.ObjectType):
         source=graphene.String(),
         web_id=graphene.String(),
         price=graphene.Float(),
+        image=graphene.String(),
+        adv_url=graphene.String(),
     )
 
     def resolve_homes(self, info):

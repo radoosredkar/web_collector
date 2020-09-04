@@ -19,6 +19,8 @@ def db_add(item):
     price = float(item.price.replace("€", "").replace(".", "").replace(",", "."))
     source = item.source
     date_created = item.date_created
+    image = item.image
+    adv_url = item.adv_url
     homesModel: HomesModel = HomesModel(
         title=title,
         description=desc,
@@ -26,6 +28,8 @@ def db_add(item):
         web_id=web_id,
         price=price,
         source=source,
+        image=image,
+        adv_url=adv_url,
     )
 
     # print(f"X{created}X")
@@ -67,6 +71,12 @@ class ExtractorDesc(object):
                     instance.__setattr__(
                         self.attr, datetime.strptime(item.text, "%d.%m.%Y.")
                     )
+                elif self.attr == "image":
+                    instance.__setattr__(self.attr, item["data-src"])
+                elif self.attr == "adv_url":
+                    instance.__setattr__(
+                        self.attr, f'https://www.bolha.com{item["href"]}'
+                    )
                 else:
                     instance.__setattr__(self.attr, " ".join(item.text.split()))
                 return instance.__getattribute__(self.attr)
@@ -90,6 +100,14 @@ class ExtractorDescNepremicnine(object):
                     instance.__setattr__(
                         self.attr, datetime.strptime(item.text, "%d.%m.%Y.")
                     )
+                elif self.attr == "image":
+                    instance.__setattr__(
+                        self.attr, item.find("img", recursive=False)["data-src"]
+                    )
+                elif self.attr == "adv_url":
+                    instance.__setattr__(
+                        self.attr, f'https://www.nepremicnine.net{item["href"]}'
+                    )
                 else:
                     instance.__setattr__(self.attr, " ".join(item.text.split()))
                 return instance.__getattribute__(self.attr)
@@ -102,6 +120,8 @@ class Parser:
     price = ExtractorDesc("price", "price price--hrk")
     currency = ExtractorDesc("currency", "currency")
     web_id = ExtractorDesc("web_id", "entity-title")
+    image = ExtractorDesc("image", "entity-thumbnail-img")
+    adv_url = ExtractorDesc("adv_url", "link")
     source = "Bolha"
 
     def __init__(self, item):
@@ -119,6 +139,8 @@ class ParserNepremicnine:
     price = ExtractorDescNepremicnine("price", "cena")
     currency = ExtractorDescNepremicnine("currency", "currency")
     web_id = ExtractorDescNepremicnine("web_id", "oglas_container")
+    image = ExtractorDescNepremicnine("image", "slika")
+    adv_url = ExtractorDescNepremicnine("adv_url", "slika")
     source = "Nepremicnine"
 
     def __init__(self, item):
@@ -147,6 +169,8 @@ def scrapp():
                     # print("date", parser.date_created)
                     # print("price", parser.price)
                     # print("web_id", parser.web_id)
+                    # print("image", parser.image)
+                    # print("adv_url", parser.adv_url)
                     if db_add(parser):
                         new_items += 1
         else:
@@ -175,9 +199,10 @@ def scrappNepremicnine():
                 # print("desc", parser.desc)
                 # print("date", parser.date_created)
                 # print("price", parser.price)
-                # print("web_id", parser.web_id)
+                # print("image", parser.image)
+                # print("adv_url", parser.adv_url)
                 if db_add(parser):
-                   new_items += 1
+                    new_items += 1
     print(f"Commiting to db {new_items} new items")
 
 
