@@ -18,6 +18,8 @@ class HomesModel(Base):
     source = Column(String)
     web_id = Column(String)
     price = Column(Integer)
+    image = Column(String)
+    adv_url = Column(String)
 
     def __repr__(self):
         return f"HomesModel {self.id} {self.title} {self.description} {self.date_created} {self.date_changed} {self.source}"
