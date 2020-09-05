@@ -2,7 +2,8 @@
 Finding apartments of intrest on various web sources
 
 TODO:
-- create graphql endpoints, fb, basic model
-- prepare basic web scrapper for nepremicnine.net
-- prepare basic frontend
-- implement filtering and/or sorting
+- add refreshing db from frontend
+- add logging
+- check wierd reporting of found new records for nepremicnine
+- generalize both scrappers
+- add somme commenting for choosen apartments
