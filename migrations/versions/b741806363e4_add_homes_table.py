@@ -23,7 +23,7 @@ def upgrade():
     sa.Column('title', sa.String(), nullable=True),
     sa.Column('description', sa.String(), nullable=True),
     sa.Column('date_created', sa.String(), nullable=True),
-    sa.Column('date_changed', sa.String(), nullable=True),
+    sa.Column('date_found', sa.String(), nullable=True),
     sa.Column('source', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )

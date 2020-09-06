@@ -39,6 +39,8 @@ def db_add(item):
     if not existing_sr:
         sesson.add(homesModel)
         return True
+    else:
+        existing_sr.date_found = datetime.now()
     return False
 
 
@@ -135,7 +137,7 @@ class Parser:
 class ParserNepremicnine:
     title = ExtractorDescNepremicnine("title", "title")
     desc = ExtractorDescNepremicnine("decs", "kratek")
-    date_created = ExtractorDescNepremicnine("date_created", "date date--full")
+    date_created = datetime.now()
     price = ExtractorDescNepremicnine("price", "cena")
     currency = ExtractorDescNepremicnine("currency", "currency")
     web_id = ExtractorDescNepremicnine("web_id", "oglas_container")

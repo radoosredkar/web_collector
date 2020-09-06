@@ -15,7 +15,7 @@ class Query(graphene.ObjectType):
         title=graphene.String(),
         desc=graphene.String(),
         date_created=graphene.Date(),
-        date_changed=graphene.Date(),
+        date_found=graphene.Date(),
         source=graphene.String(),
         web_id=graphene.String(),
         price=graphene.Float(),
