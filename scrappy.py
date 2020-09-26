@@ -11,6 +11,7 @@ from datetime import datetime
 # import sentry_sdk
 # sentry_sdk.init("https://007e055e5fe64e35b55b36140bf6b18d@o371271.ingest.sentry.io/5363923")
 
+all_changed_items = 0
 
 def db_add(item):
     title = item.title
@@ -37,6 +38,8 @@ def db_add(item):
         sesson.query(HomesModel).filter(HomesModel.web_id == f"{web_id}").first()
     )
     if not existing_sr:
+        global all_changed_items
+        all_changed_items = all_changed_items + 1
         sesson.add(homesModel)
         return True
     else:
@@ -214,3 +217,4 @@ if __name__ == "__main__":
     sesson.commit()
     scrappNepremicnine()
     sesson.commit()
+    print(all_changed_items)
