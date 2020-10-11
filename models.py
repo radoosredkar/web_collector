@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, String, Column, Date
+from sqlalchemy import Integer, String, Column, Date, text
 from sqlalchemy.ext.declarative import declarative_base
 from db import Sesson
 
@@ -20,6 +20,7 @@ class HomesModel(Base):
     price = Column(Integer)
     image = Column(String)
     adv_url = Column(String)
+    archived = Column(Integer, server_default=text('0'), nullable=False)
 
     def __repr__(self):
         return f"HomesModel {self.id} {self.title} {self.description} {self.date_created} {self.date_found} {self.source}"

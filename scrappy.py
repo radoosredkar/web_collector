@@ -6,12 +6,13 @@ from models import HomesModel
 from db import Sesson
 import bs4
 from bs4 import BeautifulSoup
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # import sentry_sdk
 # sentry_sdk.init("https://007e055e5fe64e35b55b36140bf6b18d@o371271.ingest.sentry.io/5363923")
 
 all_changed_items = 0
+
 
 def db_add(item):
     title = item.title
@@ -44,8 +45,12 @@ def db_add(item):
         return True
     else:
         existing_sr.date_found = datetime.now()
-    return False
 
+    # update archived records if oldet than 5 days
+    sesson.query(HomesModel).filter(
+        HomesModel.date_found < (datetime.now() - timedelta(5))
+    ).update(dict(archived=1))
+    return False
 
 url_bolha = "https://www.bolha.com/index.php?ctl=search_ads&keywords=stanovanja&categoryId=9580&price[min]=98000&price[max]=140999&level0LocationId%5B26320%5D=26320&sort=new&page={page}"
 
