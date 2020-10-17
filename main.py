@@ -18,6 +18,7 @@ app.add_url_rule(
     view_func=GraphQLView.as_view("graphqlb", schema=schema, batch=True, method="POST"),
 )
 
+
 @app.route("/refresh")
 def refresh():
     scrappy.scrapp()
@@ -25,8 +26,9 @@ def refresh():
     scrappy.sesson.commit()
     return f"{str(scrappy.all_changed_items)}"
 
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")
 
 
 @app.before_request
