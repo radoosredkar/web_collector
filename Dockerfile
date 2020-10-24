@@ -19,5 +19,10 @@ RUN /usr/local/bin/python -m pip install --upgrade pip
 
 EXPOSE 5000
 
+RUN echo "pip install -r /usr/code/requirements.txt" > /usr/bin/build
+RUN echo "python /usr/code/main.py" > /usr/bin/run
+RUN chmod +x /usr/bin/build
+RUN chmod +x /usr/bin/run
+
 # command to run on container start
 #CMD [ "python", "./main.py" ] 
