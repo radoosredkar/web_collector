@@ -2,6 +2,7 @@
 Finding apartments of intrest on various web sources
 
 TODO:
+- create docker compose for running all containers
 - create build command that will:
 		- run pip install -r requirements.txt
 - create run command that will:
