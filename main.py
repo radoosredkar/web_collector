@@ -23,7 +23,7 @@ app.add_url_rule(
 )
 
 
-@app.route("/refreshq")
+@app.route("/refresh")
 def refresh():
     scrappy.scrapp()
     scrappy.scrappNepremicnine()
