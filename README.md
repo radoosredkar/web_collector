@@ -2,11 +2,10 @@
 Finding apartments of intrest on various web sources
 
 TODO:
+- deploy to some clowd infrastructire, preferablly AWS
 - create docker compose for running all containers
-- create build command that will:
-		- run pip install -r requirements.txt
-- create run command that will:
-		- run python main.py
+- check redis sessions
+- add docker builds only on certain tags
 - extract parsers to separate files and module
 - add cleaning of records, or better archieving
 - add logging
