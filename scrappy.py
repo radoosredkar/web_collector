@@ -39,6 +39,7 @@ def db_add(item):
         sesson.query(HomesModel).filter(HomesModel.web_id == f"{web_id}").first()
     )
     if not existing_sr:
+        #ipdb.set_trace()
         global all_changed_items
         all_changed_items = all_changed_items + 1
         sesson.add(homesModel)
@@ -186,6 +187,8 @@ def scrapp():
         else:
             print(f"Commiting to db {new_items} new items")
             break
+    print(f"Commiting to db {new_items} new items")
+    return new_items;
 
 
 def scrappNepremicnine():
@@ -214,6 +217,7 @@ def scrappNepremicnine():
                 if db_add(parser):
                     new_items += 1
     print(f"Commiting to db {new_items} new items")
+    return new_items;
 
 
 sesson = Sesson()

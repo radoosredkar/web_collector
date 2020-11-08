@@ -45,6 +45,8 @@ class Query(graphene.ObjectType):
             flt.append((HomesModel.description.contains(description)))
         if archived:
             flt.append(HomesModel.archived == 1)
+        if not archived:
+            flt.append(HomesModel.archived == 0)
         if price_to:
             flt.append((HomesModel.price <= price_to))
         if price_from:
