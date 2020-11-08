@@ -5,6 +5,7 @@ TODO:
 - deploy to some clowd infrastructire, preferablly AWS
 - create docker compose for running all containers
 - check redis sessions
+- check wiert urls
 - add docker builds only on certain tags
 - extract parsers to separate files and module
 - add cleaning of records, or better archieving
