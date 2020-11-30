@@ -9,10 +9,10 @@ WORKDIR /usr/code
 RUN /usr/local/bin/python -m pip install --upgrade pip
 
 # copy the dependencies file to the working directory
-#COPY requirements.txt .
+COPY requirements.txt .
 
 # install dependencies
-#RUN pip install -r requirements.txt
+RUN pip install -r /usr/code/requirements.txt
 
 # copy the content of the local src directory to the working directory
 #COPY . .
@@ -25,4 +25,4 @@ RUN chmod +x /usr/bin/build
 RUN chmod +x /usr/bin/run
 
 # command to run on container start
-#CMD [ "python", "./main.py" ] 
+CMD [ "python", "/usr/code/main.py" ] 
