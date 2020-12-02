@@ -3,8 +3,8 @@ FROM python:3.8
 
 # set the working directory in the container
 RUN apt-get update && apt-get install -y vim
-RUN mkdir /usr/code
-WORKDIR /usr/code
+RUN mkdir /usr/code1
+WORKDIR /usr/code1
 
 RUN /usr/local/bin/python -m pip install --upgrade pip
 
