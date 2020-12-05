@@ -7,9 +7,14 @@ from db import Sesson
 import bs4
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
+from log import logger
+import log
+import sys
 
 # import sentry_sdk
 # sentry_sdk.init("https://007e055e5fe64e35b55b36140bf6b18d@o371271.ingest.sentry.io/5363923")
+log.setLoggingFile(__name__)
+log.setStreamHandler(None)
 
 all_changed_items = 0
 
@@ -23,6 +28,10 @@ def db_add(item):
     date_created = item.date_created
     image = item.image
     adv_url = item.adv_url
+
+    to_log = (title, web_id, price, source, date_created, image, adv_url)
+
+    logger.debug(f"creating record {to_log}")
     homesModel: HomesModel = HomesModel(
         title=title,
         description=desc,
@@ -38,8 +47,10 @@ def db_add(item):
     existing_sr = (
         sesson.query(HomesModel).filter(HomesModel.web_id == f"{web_id}").first()
     )
+    logger.debug(f"record {web_id} {'found' if existing_sr else 'not found' } in db")
     if not existing_sr:
-        #ipdb.set_trace()
+        logger.info("Adding {web_id} to db")
+        # ipdb.set_trace()
         global all_changed_items
         all_changed_items = all_changed_items + 1
         sesson.add(homesModel)
@@ -52,6 +63,7 @@ def db_add(item):
         HomesModel.date_found < (datetime.now() - timedelta(5))
     ).update(dict(archived=1))
     return False
+
 
 url_bolha = "https://www.bolha.com/index.php?ctl=search_ads&keywords=stanovanja&categoryId=9580&price[min]=98000&price[max]=140999&level0LocationId%5B26320%5D=26320&sort=new&page={page}"
 
@@ -165,13 +177,14 @@ class ParserNepremicnine:
 def scrapp():
     new_items = 0
     for pageNum in range(1, 100):
-        print(f"parsing page {pageNum}")
+        logger.info(f"parsing page {pageNum}")
+        # print(f"parsing page {pageNum}")
         page: requests.models.Response = requests.get(url_bolha.format(page=pageNum))
         soup: bs4.BeautifulSoup = BeautifulSoup(page.content, "html.parser")
         stop_element = soup.find(class_="brdr_top ad_item")
         if not stop_element:
             all_items = soup.find_all(class_="EntityList-item")
-            print(f"{len(all_items)} items found")
+            logger.debug(f"{len(all_items)} items found")
             for item in all_items:
                 parser: Parser = Parser(item)
                 if parser.title and parser.desc:
@@ -185,25 +198,26 @@ def scrapp():
                     if db_add(parser):
                         new_items += 1
         else:
-            print(f"Commiting to db {new_items} new items")
+            logger.info(f"Commiting to db {new_items} new items")
             break
-    print(f"Commiting to db {new_items} new items")
-    return new_items;
+    logger.info(f"Commiting to db {new_items} new items")
+    return new_items
 
 
 def scrappNepremicnine():
     new_items = 0
     for pageNum in range(1, 10):
-        print(f"parsing page {pageNum}")
+        logger.info(f"parsing page {pageNum}")
+        # print(f"parsing page {pageNum}")
         page: requests.models.Response = requests.get(
             url_nepremicnine.format(page=pageNum)
         )
-        print(url_nepremicnine.format(page=pageNum))
+        logger.debug(url_nepremicnine.format(page=pageNum))
         soup: bs4.BeautifulSoup = BeautifulSoup(page.content, "html.parser")
         all_items = soup.find_all(class_="oglas_container")
         if not all_items:
             break
-        print(f"{len(all_items)} items found")
+        logger.info(f"{len(all_items)} items found")
         for item in all_items:
             parser: ParserNepremicnine = ParserNepremicnine(item)
             if parser.title and parser.desc:
@@ -216,8 +230,8 @@ def scrappNepremicnine():
                 # print("adv_url", parser.adv_url)
                 if db_add(parser):
                     new_items += 1
-    print(f"Commiting to db {new_items} new items")
-    return new_items;
+    logger.info(f"Commiting to db {new_items} new items")
+    return new_items
 
 
 sesson = Sesson()
@@ -226,4 +240,5 @@ if __name__ == "__main__":
     sesson.commit()
     scrappNepremicnine()
     sesson.commit()
+    logger.info(all_changed_items)
     print(all_changed_items)
