@@ -10,6 +10,8 @@ from datetime import datetime, timedelta
 from log import logger
 import log
 import sys
+import ParserBolha as bolha
+import ParserNepremicnine as nepremicnine
 
 # import sentry_sdk
 # sentry_sdk.init("https://007e055e5fe64e35b55b36140bf6b18d@o371271.ingest.sentry.io/5363923")
@@ -69,110 +71,6 @@ url_bolha = "https://www.bolha.com/index.php?ctl=search_ads&keywords=stanovanja&
 url_nepremicnine = "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-okolica/stanovanje/cena-od-100000-do-150000-eur,velikost-od-50-do-100-m2/{page}/"
 
 
-class ExtractorDesc(object):
-    item = None
-    """A data descriptor that extracts data from BeautifulSoup item"""
-
-    def __init__(self, attr, class_):
-        self.attr = attr
-        self.class_ = class_
-
-    def __get__(self, instance, owner):
-        if instance.item:
-            item = instance.item.find(class_=self.class_)
-            if item:
-                if self.attr == "web_id":
-                    link = item.find(class_="link")
-                    if link:
-                        name = link.get("name")
-                        instance.__setattr__(self.attr, name)
-
-                elif self.attr == "price":
-                    instance.__setattr__(self.attr, " ".join(item.text.split()))
-                elif self.attr == "date_created":
-                    instance.__setattr__(
-                        self.attr, datetime.strptime(item.text, "%d.%m.%Y.")
-                    )
-                elif self.attr == "image":
-                    instance.__setattr__(self.attr, item["data-src"])
-                elif self.attr == "adv_url":
-                    instance.__setattr__(
-                        self.attr, f'https://www.bolha.com{item["href"]}'
-                    )
-                else:
-                    instance.__setattr__(self.attr, " ".join(item.text.split()))
-                return instance.__getattribute__(self.attr)
-
-
-class ExtractorDescNepremicnine(object):
-    item = None
-    """A data descriptor that extracts data from BeautifulSoup item"""
-
-    def __init__(self, attr, class_):
-        self.attr = attr
-        self.class_ = class_
-
-    def __get__(self, instance, owner):
-        if instance.item:
-            item = instance.item.find(class_=self.class_)
-            if item:
-                if self.attr == "price":
-                    instance.__setattr__(self.attr, (item.text.split()[0]))
-                elif self.attr == "date_created":
-                    instance.__setattr__(
-                        self.attr, datetime.strptime(item.text, "%d.%m.%Y.")
-                    )
-                elif self.attr == "image":
-                    instance.__setattr__(
-                        self.attr, item.find("img", recursive=False)["data-src"]
-                    )
-                elif self.attr == "adv_url":
-                    instance.__setattr__(
-                        self.attr, f'https://www.nepremicnine.net{item["href"]}'
-                    )
-                else:
-                    instance.__setattr__(self.attr, " ".join(item.text.split()))
-                return instance.__getattribute__(self.attr)
-
-
-class Parser:
-    title = ExtractorDesc("title", "entity-title")
-    desc = ExtractorDesc("decs", "entity-description-main")
-    date_created = ExtractorDesc("date_created", "date date--full")
-    price = ExtractorDesc("price", "price price--hrk")
-    currency = ExtractorDesc("currency", "currency")
-    web_id = ExtractorDesc("web_id", "entity-title")
-    image = ExtractorDesc("image", "entity-thumbnail-img")
-    adv_url = ExtractorDesc("adv_url", "link")
-    source = "Bolha"
-
-    def __init__(self, item):
-        self.__dict__["item"] = item
-
-    def __setattr(self, attr, val):
-        if attr == "title":
-            self.title.item = self.item
-
-
-class ParserNepremicnine:
-    title = ExtractorDescNepremicnine("title", "title")
-    desc = ExtractorDescNepremicnine("decs", "kratek")
-    date_created = datetime.now()
-    price = ExtractorDescNepremicnine("price", "cena")
-    currency = ExtractorDescNepremicnine("currency", "currency")
-    web_id = ExtractorDescNepremicnine("web_id", "oglas_container")
-    image = ExtractorDescNepremicnine("image", "slika")
-    adv_url = ExtractorDescNepremicnine("adv_url", "slika")
-    source = "Nepremicnine"
-
-    def __init__(self, item):
-        self.__dict__["item"] = item
-
-    def __setattr(self, attr, val):
-        if attr == "title":
-            self.title.item = self.item
-
-
 def scrapp():
     new_items = 0
     for pageNum in range(1, 100):
@@ -185,7 +83,7 @@ def scrapp():
             all_items = soup.find_all(class_="EntityList-item")
             logger.debug(f"{len(all_items)} items found")
             for item in all_items:
-                parser: Parser = Parser(item)
+                parser: bolha.Parser = bolha.Parser(item)
                 if parser.title and parser.desc:
                     # print("title", parser.title)
                     # print("desc", parser.desc)
@@ -220,16 +118,18 @@ def scrappNepremicnine():
             break
         logger.info(f"{len(all_items)} items found")
         for item in all_items:
-            parser: ParserNepremicnine = ParserNepremicnine(item)
+            parser: nepremicnine.Parser = nepremicnine.Parser(item)
             if parser.title and parser.desc:
-                parser.web_id = item["id"]
+                # parser.web_id = item["id"]
                 # print("title", parser.title)
                 # print("desc", parser.desc)
                 # print("date", parser.date_created)
                 # print("price", parser.price)
                 # print("image", parser.image)
                 # print("adv_url", parser.adv_url)
-                parser.image = parser.image.replace('sIonep', 'slonep') #quickfix because of Beautifuls soup's invalid parsing of l 
+                parser.image = parser.image.replace(
+                    "sIonep", "slonep"
+                )  # quickfix because of Beautifuls soup's invalid parsing of l
                 if db_add(parser):
                     new_items += 1
     logger.info(f"Commiting to db {new_items} new items")
