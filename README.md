@@ -2,17 +2,20 @@
 Finding apartments of intrest on various web sources
 
 TODO:
-- deploy to some clowd infrastructire, preferablly AWS
-- create docker compose for running all containers
+- deploy to some cloud infrastructire, preferablly AWS
 - check redis sessions
 - check wierd urls
 - add docker builds only on certain tags
 - extract parsers to separate files and module
 - add cleaning of records, or better archieving
-- add logging
 - check wierd reporting of found new records for nepremicnine
 - generalize both scrappers
-- add somme commenting for choosen apartments
+- add commenting for choosen apartments
+- add filter changing (now it is fixed)
+- add add to favorites and favorites filter
+- add apartment size to the datamodel
+- add enable and desable archieving
+- add manual move to and from archive
 
 Docker commands:
 ```
