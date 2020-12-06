@@ -229,7 +229,7 @@ def scrappNepremicnine():
                 # print("price", parser.price)
                 # print("image", parser.image)
                 # print("adv_url", parser.adv_url)
-                parser.image = parser.image.replace('sIonep', 'slonep')
+                parser.image = parser.image.replace('sIonep', 'slonep') #quickfix because of Beautifuls soup's invalid parsing of l 
                 if db_add(parser):
                     new_items += 1
     logger.info(f"Commiting to db {new_items} new items")
