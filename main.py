@@ -3,6 +3,8 @@ from flask_graphql import GraphQLView
 from schemas import schema
 from flask_cors import CORS, cross_origin
 import scrappy
+import ParserBolha as bolha
+import ParserNepremicnine as nepremicnine
 import logging
 
 import sentry_sdk
@@ -25,10 +27,7 @@ app.add_url_rule(
 
 @app.route("/refresh")
 def refresh():
-    scrappy.scrapp()
-    scrappy.scrappNepremicnine()
-    scrappy.sesson.commit()
-    return f"{str(scrappy.all_changed_items)}"
+    return scrappy.refresh()
 
 
 if __name__ == "__main__":

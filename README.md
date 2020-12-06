@@ -4,9 +4,7 @@ Finding apartments of intrest on various web sources
 TODO:
 - deploy to some cloud infrastructire, preferablly AWS
 - check redis sessions
-- check wierd urls
 - add docker builds only on selected tags
-- extract parsers to separate files and module
 - add cleaning of records, or better archieving
 - check wierd reporting of found new records for nepremicnine
 - generalize both scrappers
@@ -16,6 +14,12 @@ TODO:
 - add apartment size to the datamodel
 - add enable and desable archieving
 - add manual move to and from archive
+
+IN PROGRESS
+- extract parsers to separate files and module
+
+DONE
+- check wierd urls
 
 Docker commands:
 ```
