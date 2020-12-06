@@ -50,7 +50,6 @@ def db_add(item):
     logger.debug(f"record {web_id} {'found' if existing_sr else 'not found' } in db")
     if not existing_sr:
         logger.info("Adding {web_id} to db")
-        # ipdb.set_trace()
         global all_changed_items
         all_changed_items = all_changed_items + 1
         sesson.add(homesModel)
@@ -213,7 +212,9 @@ def scrappNepremicnine():
             url_nepremicnine.format(page=pageNum)
         )
         logger.debug(url_nepremicnine.format(page=pageNum))
-        soup: bs4.BeautifulSoup = BeautifulSoup(page.content, "html.parser")
+        soup: bs4.BeautifulSoup = BeautifulSoup(
+            page.content, "html.parser", from_encoding="utf-8"
+        )
         all_items = soup.find_all(class_="oglas_container")
         if not all_items:
             break
@@ -228,6 +229,7 @@ def scrappNepremicnine():
                 # print("price", parser.price)
                 # print("image", parser.image)
                 # print("adv_url", parser.adv_url)
+                parser.image = parser.image.replace('sIonep', 'slonep')
                 if db_add(parser):
                     new_items += 1
     logger.info(f"Commiting to db {new_items} new items")
