@@ -1,146 +1,31 @@
 import ipdb
-import requests
-import praw
-import datetime
-from models import HomesModel
 from db import Sesson
-import bs4
-from bs4 import BeautifulSoup
-from datetime import datetime, timedelta
 from log import logger
 import log
 import sys
 import ParserBolha as bolha
 import ParserNepremicnine as nepremicnine
+import scrappy_db as db
 
 # import sentry_sdk
 # sentry_sdk.init("https://007e055e5fe64e35b55b36140bf6b18d@o371271.ingest.sentry.io/5363923")
 log.setLoggingFile(__name__)
 log.setStreamHandler(None)
 
-all_changed_items = 0
-
-
-def db_add(item):
-    title = item.title
-    desc = item.desc
-    web_id = item.web_id
-    price = float(item.price.replace("€", "").replace(".", "").replace(",", "."))
-    source = item.source
-    date_created = item.date_created
-    image = item.image
-    adv_url = item.adv_url
-
-    to_log = (title, web_id, price, source, date_created, image, adv_url)
-
-    logger.debug(f"creating record {to_log}")
-    homesModel: HomesModel = HomesModel(
-        title=title,
-        description=desc,
-        date_created=date_created,
-        web_id=web_id,
-        price=price,
-        source=source,
-        image=image,
-        adv_url=adv_url,
-    )
-
-    # print(f"X{created}X")
-    existing_sr = (
-        sesson.query(HomesModel).filter(HomesModel.web_id == f"{web_id}").first()
-    )
-    logger.debug(f"record {web_id} {'found' if existing_sr else 'not found' } in db")
-    if not existing_sr:
-        logger.info("Adding {web_id} to db")
-        global all_changed_items
-        all_changed_items = all_changed_items + 1
-        sesson.add(homesModel)
-        return True
-    else:
-        existing_sr.date_found = datetime.now()
-
-    # update archived records if oldet than 5 days
-    sesson.query(HomesModel).filter(
-        HomesModel.date_found < (datetime.now() - timedelta(5))
-    ).update(dict(archived=1))
-    return False
-
-
 url_bolha = "https://www.bolha.com/index.php?ctl=search_ads&keywords=stanovanja&categoryId=9580&price[min]=98000&price[max]=140999&level0LocationId%5B26320%5D=26320&sort=new&page={page}"
 
 url_nepremicnine = "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-okolica/stanovanje/cena-od-100000-do-150000-eur,velikost-od-50-do-100-m2/{page}/"
 
 
-def scrapp():
-    new_items = 0
-    for pageNum in range(1, 100):
-        logger.info(f"parsing page {pageNum}")
-        # print(f"parsing page {pageNum}")
-        page: requests.models.Response = requests.get(url_bolha.format(page=pageNum))
-        soup: bs4.BeautifulSoup = BeautifulSoup(page.content, "html.parser")
-        stop_element = soup.find(class_="brdr_top ad_item")
-        if not stop_element:
-            all_items = soup.find_all(class_="EntityList-item")
-            logger.debug(f"{len(all_items)} items found")
-            for item in all_items:
-                parser: bolha.Parser = bolha.Parser(item)
-                if parser.title and parser.desc:
-                    # print("title", parser.title)
-                    # print("desc", parser.desc)
-                    # print("date", parser.date_created)
-                    # print("price", parser.price)
-                    # print("web_id", parser.web_id)
-                    # print("image", parser.image)
-                    # print("adv_url", parser.adv_url)
-                    if db_add(parser):
-                        new_items += 1
-        else:
-            logger.info(f"Commiting to db {new_items} new items")
-            break
-    logger.info(f"Commiting to db {new_items} new items")
-    return new_items
+def refresh():
+    db.sesson = Sesson()
+    all_changed_items = 0
+    all_changed_items = all_changed_items + bolha.scrapp(url_bolha)
+    all_changed_items = all_changed_items + nepremicnine.scrapp(url_nepremicnine)
+    db.sesson.commit()
+    return f"{str(all_changed_items)}"
 
 
-def scrappNepremicnine():
-    new_items = 0
-    for pageNum in range(1, 10):
-        logger.info(f"parsing page {pageNum}")
-        # print(f"parsing page {pageNum}")
-        page: requests.models.Response = requests.get(
-            url_nepremicnine.format(page=pageNum)
-        )
-        logger.debug(url_nepremicnine.format(page=pageNum))
-        soup: bs4.BeautifulSoup = BeautifulSoup(
-            page.content, "html.parser", from_encoding="utf-8"
-        )
-        all_items = soup.find_all(class_="oglas_container")
-        if not all_items:
-            break
-        logger.info(f"{len(all_items)} items found")
-        for item in all_items:
-            parser: nepremicnine.Parser = nepremicnine.Parser(item)
-            if parser.title and parser.desc:
-                # parser.web_id = item["id"]
-                # print("title", parser.title)
-                # print("desc", parser.desc)
-                # print("date", parser.date_created)
-                # print("price", parser.price)
-                # print("image", parser.image)
-                # print("adv_url", parser.adv_url)
-                parser.image = parser.image.replace(
-                    "sIonep", "slonep"
-                )  # quickfix because of Beautifuls soup's invalid parsing of l
-                if db_add(parser):
-                    new_items += 1
-    logger.info(f"Commiting to db {new_items} new items")
-    return new_items
-
-
-sesson = Sesson()
 if __name__ == "__main__":
-    scrapp()
-    sesson.commit()
-    scrappNepremicnine()
-    sesson.commit()
-    logger.info(all_changed_items)
+    all_changed_items = refresh()
     print(all_changed_items)

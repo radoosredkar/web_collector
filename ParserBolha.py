@@ -1,4 +1,14 @@
 from datetime import datetime, timedelta
+import bs4
+from bs4 import BeautifulSoup
+import requests
+from log import logger
+import log
+import scrappy_db as db
+
+log.setLoggingFile(__name__)
+log.setStreamHandler(None)
+
 
 class ExtractorDesc(object):
     item = None
@@ -52,3 +62,33 @@ class Parser:
     def __setattr(self, attr, val):
         if attr == "title":
             self.title.item = self.item
+
+
+def scrapp(url: str):
+    new_items = 0
+    for pageNum in range(1, 100):
+        logger.info(f"parsing page {pageNum}")
+        # print(f"parsing page {pageNum}")
+        page: requests.models.Response = requests.get(url.format(page=pageNum))
+        soup: bs4.BeautifulSoup = BeautifulSoup(page.content, "html.parser")
+        stop_element = soup.find(class_="brdr_top ad_item")
+        if not stop_element:
+            all_items = soup.find_all(class_="EntityList-item")
+            logger.debug(f"{len(all_items)} items found")
+            for item in all_items:
+                parser: Parser = Parser(item)
+                if parser.title and parser.desc:
+                    # print("title", parser.title)
+                    # print("desc", parser.desc)
+                    # print("date", parser.date_created)
+                    # print("price", parser.price)
+                    # print("web_id", parser.web_id)
+                    # print("image", parser.image)
+                    # print("adv_url", parser.adv_url)
+                    if db.db_add(parser):
+                        new_items += 1
+        else:
+            logger.info(f"Commiting to db {new_items} new items")
+            break
+    logger.info(f"Commiting to db {new_items} new items")
+    return new_items
