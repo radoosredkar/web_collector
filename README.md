@@ -8,7 +8,6 @@ TODO:
 - add cleaning of records, or better archieving
 - check wierd reporting of found new records for nepremicnine
 - generalize both scrappers
-- add commenting for choosen apartments
 - add filter changing (now it is fixed)
 - add add to favorites and favorites filter
 - add apartment size to the datamodel
@@ -20,6 +19,7 @@ IN PROGRESS
 
 DONE
 - check wierd urls
+- add commenting for choosen apartments
 
 Docker commands:
 ```
