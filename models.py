@@ -21,6 +21,7 @@ class HomesModel(Base):
     image = Column(String)
     adv_url = Column(String)
     archived = Column(Integer, server_default=text('0'), nullable=False)
+    comment = Column(String)
 
     def __repr__(self):
         return f"HomesModel {self.id} {self.title} {self.description} {self.date_created} {self.date_found} {self.source}"

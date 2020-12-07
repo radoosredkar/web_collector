@@ -15,6 +15,7 @@ def setStreamHandler(stream=stdout):
 
 
 def setLoggingFile(fileName):
+    fileName = "web_scrapper"# fixed for now
     handler = logging.handlers.TimedRotatingFileHandler(
         f"{fileName}.log", when="midnight", interval=1
     )
