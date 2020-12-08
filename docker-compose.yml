@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   wscr:
-    container_name: wscr1
+    container_name: wscr
     build: ~/sw/python/web_collector
     volumes: 
     - ~/sw/python/web_collector:/usr/code
@@ -9,7 +9,7 @@ services:
     - "5000:5000"
     #command: /usr/bin/run
   wsfront:
-    container_name: wsfront1
+    container_name: wsfront
     build: ~/sw/javascript/web_collector_front
     volumes: 
     - ~/sw/javascript/web_collector_front:/usr/app
