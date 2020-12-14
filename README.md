@@ -4,7 +4,6 @@ Finding apartments of intrest on various web sources
 TODO:
 - deploy to some cloud infrastructire, preferablly AWS
 - check redis sessions
-- add docker builds only on selected tags
 - add cleaning of records, or better archieving
 - check wierd reporting of found new records for nepremicnine
 - generalize both scrappers
@@ -18,6 +17,7 @@ IN PROGRESS
 - extract parsers to separate files and module
 
 DONE
+- add docker builds only on selected tags (we are building only master branch instead)
 - check wierd urls
 - add commenting for choosen apartments
 
