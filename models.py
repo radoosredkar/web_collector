@@ -1,6 +1,6 @@
 from sqlalchemy import Integer, String, Column, Date, text
 from sqlalchemy.ext.declarative import declarative_base
-from db import Sesson
+from .db import Sesson
 
 
 Base = declarative_base()

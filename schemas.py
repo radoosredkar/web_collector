@@ -1,10 +1,10 @@
 import graphene
-from models import HomesModel
+from .models import HomesModel
 from graphene_sqlalchemy import SQLAlchemyObjectType
 from sqlalchemy import and_
-from db import Sesson
-from log import logger
-import log
+from .db import Sesson
+from .log import logger
+from . import log
 
 
 log.setLoggingFile(__name__)
@@ -12,7 +12,6 @@ log.setStreamHandler(None)
 class Homes(SQLAlchemyObjectType):
     class Meta:
         model = HomesModel
-
 
 class UpdateComment(graphene.Mutation):
     class Arguments:
