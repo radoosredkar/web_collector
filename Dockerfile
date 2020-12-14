@@ -3,8 +3,8 @@ FROM python:3.8
 
 # set the working directory in the container
 RUN apt-get update && apt-get install -y vim
-RUN mkdir /usr/code
-WORKDIR /usr/code
+RUN mkdir /usr/src/web_collector
+WORKDIR /usr/src/web_collector
 
 RUN /usr/local/bin/python -m pip install --upgrade pip
 
@@ -12,17 +12,18 @@ RUN /usr/local/bin/python -m pip install --upgrade pip
 COPY requirements.txt .
 
 # install dependencies
-RUN pip install -r /usr/code/requirements.txt
+RUN pip install -r /usr/src/web_collector/requirements.txt
 
-# copy the content of the local src directory to the working directory
+# copy the content of the local src/web_collector directory to the working directory
 #COPY . .
 
 EXPOSE 5000
 
-RUN echo "pip install -r /usr/code/requirements.txt" > /usr/bin/build
-RUN echo "python /usr/code/main.py" > /usr/bin/run
+RUN echo "pip install -r /usr/src/web_collector/requirements.txt" > /usr/bin/build
+RUN echo "python /usr/src/web_collector/main.py" > /usr/bin/run
 RUN chmod +x /usr/bin/build
 RUN chmod +x /usr/bin/run
 
 # command to run on container start
-CMD [ "python", "/usr/code/main.py" ] 
+#CMD [ "python", "/usr/src/web_collector/main.py" ] 
+CMD [ "flask", "run", "--host=0.0.0.0" ] 
