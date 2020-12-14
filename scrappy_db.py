@@ -1,6 +1,6 @@
-from log import logger
+from .log import logger
 from datetime import datetime, timedelta
-from models import HomesModel
+from .models import HomesModel
 
 sesson = None
 

@@ -2,9 +2,9 @@ from datetime import datetime, timedelta
 import bs4
 from bs4 import BeautifulSoup
 import requests
-from log import logger
-import log
-import scrappy_db as db
+from .log import logger
+from . import log
+from . import scrappy_db as db
 
 log.setLoggingFile(__name__)
 log.setStreamHandler(None)

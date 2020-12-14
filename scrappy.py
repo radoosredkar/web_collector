@@ -1,11 +1,11 @@
 import ipdb
-from db import Sesson
-from log import logger
-import log
+from .db import Sesson
+from .log import logger
+from . import log
 import sys
-import ParserBolha as bolha
-import ParserNepremicnine as nepremicnine
-import scrappy_db as db
+from . import ParserBolha as bolha
+from .import ParserNepremicnine as nepremicnine
+from . import scrappy_db as db
 
 # import sentry_sdk
 # sentry_sdk.init("https://007e055e5fe64e35b55b36140bf6b18d@o371271.ingest.sentry.io/5363923")
