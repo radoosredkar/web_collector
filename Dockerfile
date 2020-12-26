@@ -14,7 +14,7 @@ EXPOSE 5001
 RUN service datadog-agent restart
 
 # copy the dependencies file to the working directory
-COPY requirements.txt .
+COPY web_collector/requirements.txt .
 
 # install dependencies
 RUN pip install -r /usr/src/web_collector/requirements.txt
