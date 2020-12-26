@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  wscr:
+    container_name: wscr
+    build: ~/sw/python/web_collector
+    environment:
+      - FLASK_ENV=development
+      - FLASK_APP=main.py
+    volumes: 
+      - ~/sw/python/web_collector:/usr/src/web_collector
+    ports: 
+      - "5000:5000"
+      - "5001:5001"
+      - "8126:8126"
+  wsfront:
+    container_name: wsfront
+    build: ~/sw/javascript/web_collector_front
+    volumes: 
+      - ~/sw/javascript/web_collector_front:/usr/app
+    ports: 
+      - "8080:8080"
+  #command: /usr/bin/run
