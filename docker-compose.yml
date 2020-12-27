@@ -8,6 +8,7 @@ services:
       - FLASK_APP=main.py
     volumes: 
       - ~/sw/python/web_collector:/usr/src/web_collector
+      - ~/var/log/web_collector:/var/log/web_collector
     ports: 
       - "5000:5000"
       - "5001:5001"
