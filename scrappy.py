@@ -1,6 +1,5 @@
 import ipdb
 from web_collector.db import Sesson
-from web_collector.log import logger
 from web_collector import log
 import sys
 from web_collector.scrapper import ParserBolha as bolha
@@ -9,8 +8,8 @@ from web_collector.scrapper import scrappy_db as db
 
 # import sentry_sdk
 # sentry_sdk.init("https://007e055e5fe64e35b55b36140bf6b18d@o371271.ingest.sentry.io/5363923")
-log.setLoggingFile(__name__)
-log.setStreamHandler(None)
+#log.setLoggingFile(__name__)
+#log.setStreamHandler(None)
 
 url_bolha = "https://www.bolha.com/index.php?ctl=search_ads&keywords=stanovanja&categoryId=9580&price[min]=98000&price[max]=140999&level0LocationId%5B26320%5D=26320&sort=new&page={page}"
 

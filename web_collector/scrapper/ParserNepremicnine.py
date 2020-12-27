@@ -7,8 +7,8 @@ from web_collector.log import logger
 from web_collector import log
 from web_collector.scrapper import scrappy_db as db
 
-log.setLoggingFile(__name__)
-log.setStreamHandler(None)
+#log.setLoggingFile(__name__)
+#log.setStreamHandler(None)
 
 
 class ExtractorDesc(object):
