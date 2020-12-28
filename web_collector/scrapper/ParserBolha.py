@@ -3,12 +3,8 @@ from datetime import datetime, timedelta
 import bs4
 from bs4 import BeautifulSoup
 import requests
-from web_collector.log import logger
-from web_collector import log
 from web_collector.scrapper import scrappy_db as db
-
-#log.setLoggingFile(__name__)
-#log.setStreamHandler(None)
+from flask import current_app as app
 
 
 class ExtractorDesc(object):
@@ -63,28 +59,29 @@ class Parser:
     def __setattr(self, attr, val):
         if attr == "title":
             self.title.item = self.item
+
+
 from datadog import initialize, statsd
-options = {
-    'statsd_host':'127.0.0.1',
-    'statsd_port':8125
-}
+
+options = {"statsd_host": "127.0.0.1", "statsd_port": 8125}
 
 initialize(**options)
+
 
 def scrapp(url: str):
     new_items = 0
     for pageNum in range(1, 100):
-        #logger.info("A" * 200)
-        logger.info(f"parsing page {pageNum}")
+        # app.logger.info("A" * 200)
+        app.logger.info(f"parsing page {pageNum}")
         # print(f"parsing page {pageNum}")
         page: requests.models.Response = requests.get(url.format(page=pageNum))
         soup: bs4.BeautifulSoup = BeautifulSoup(page.content, "html.parser")
         stop_element = soup.find(class_="brdr_top ad_item")
         if not stop_element:
             all_items = soup.find_all(class_="EntityList-item")
-            logger.debug(f"{len(all_items)} items found")
+            app.logger.debug(f"{len(all_items)} items found")
             for item in all_items:
-                statsd.increment('example_metric.increment', tags=["environment:bolha"])
+                statsd.increment("example_metric.increment", tags=["environment:bolha"])
                 parser: Parser = Parser(item)
                 if parser.title and parser.desc:
                     # print("title", parser.title)
@@ -95,10 +92,12 @@ def scrapp(url: str):
                     # print("image", parser.image)
                     # print("adv_url", parser.adv_url)
                     if db.db_add(parser):
-                        statsd.increment('example_metric.increment', tags=["environment:db"])
+                        statsd.increment(
+                            "example_metric.increment", tags=["environment:db"]
+                        )
                         new_items += 1
         else:
-            logger.info(f"Commiting to db {new_items} new items")
+            app.logger.info(f"Commiting to db {new_items} new items")
             break
-    logger.info(f"Commiting to db {new_items} new items")
+    app.logger.info(f"Commiting to db {new_items} new items")
     return new_items
