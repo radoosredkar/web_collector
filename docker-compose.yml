@@ -19,5 +19,5 @@ services:
     volumes: 
       - ~/sw/javascript/web_collector_front:/usr/app
     ports: 
-      - "8080:8080"
+      - "8081:8080"
   #command: /usr/bin/run

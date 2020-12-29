@@ -26,11 +26,11 @@ EXPOSE 5000
 
 RUN echo "pip install -r /usr/src/web_collector/requirements.txt" > /usr/bin/build
 RUN echo "python /usr/src/web_collector/main.py" > /usr/bin/run
-RUN "datadog-agent run"
+#RUN "datadog-agent run"
 RUN chmod +x /usr/bin/build
 RUN chmod +x /usr/bin/run
 
 # command to run on container start
 #CMD [ "python", "/usr/src/web_collector/main.py" ] 
-CMD [ "datadog-agent", "run"] 
+#CMD [ "datadog-agent", "run"] 
 CMD [ "flask", "run", "--host=0.0.0.0" ] 
