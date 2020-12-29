@@ -90,12 +90,14 @@ def scrapp(url:str):
             statsd.increment('example_metric.increment', tags=["environment:nepremicnine"])
             parser: Parser = Parser(item)
             if parser.title and parser.desc:
+                app.logger.debug(f" {parser} item found.")
                 parser.web_id = item["id"]
 
                 parser.image = parser.image.replace(
                     "sIonep", "slonep"
                 )  # quickfix because of Beautifuls soup's invalid parsing of l
                 if db.db_add(parser):
+                    app.logger.info(f"New record added {parser}")
                     statsd.increment('example_metric.increment', tags=["environment:db"])
                     new_items += 1
     app.logger.info(f"Commiting to db {new_items} new items")

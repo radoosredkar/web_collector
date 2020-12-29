@@ -84,14 +84,9 @@ def scrapp(url: str):
                 statsd.increment("example_metric.increment", tags=["environment:bolha"])
                 parser: Parser = Parser(item)
                 if parser.title and parser.desc:
-                    # print("title", parser.title)
-                    # print("desc", parser.desc)
-                    # print("date", parser.date_created)
-                    # print("price", parser.price)
-                    # print("web_id", parser.web_id)
-                    # print("image", parser.image)
-                    # print("adv_url", parser.adv_url)
+                    app.logger.debug(f" {parser} item found.")
                     if db.db_add(parser):
+                        app.logger.info(f"New record added {parser}")
                         statsd.increment(
                             "example_metric.increment", tags=["environment:db"]
                         )
