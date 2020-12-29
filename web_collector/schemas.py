@@ -3,12 +3,12 @@ from web_collector.models import HomesModel
 from graphene_sqlalchemy import SQLAlchemyObjectType
 from sqlalchemy import and_
 from web_collector.db import Sesson
-from web_collector.log import logger
 from web_collector import log
+from flask import current_app as app
 
 
-log.setLoggingFile(__name__)
-log.setStreamHandler(None)
+#log.setLoggingFile(__name__)
+#log.setStreamHandler(None)
 class Homes(SQLAlchemyObjectType):
     class Meta:
         model = HomesModel
@@ -58,7 +58,7 @@ class Query(graphene.ObjectType):
         return query.all()
 
     def resolve_home(self, info, **args):
-        logger.debug("resolve_home %s", args)
+        app.logger.debug("resolve_home %s", args)
         ident = args.get("ident")
         title = args.get("title")
         comment = args.get("comment")
@@ -69,7 +69,7 @@ class Query(graphene.ObjectType):
 
         flt = []
         if ident:
-            logger.debug("Searching by id %s", ident)
+            app.logger.debug("Searching by id %s", ident)
             flt.append(HomesModel.id == ident)
         if title:
             flt.append((HomesModel.title.contains(title)))
@@ -93,7 +93,7 @@ class Query(graphene.ObjectType):
         query = Homes.get_query(info)
 
         sql = query.filter(*flt)
-        logger.debug(sql)
+        app.logger.debug(sql)
         return sql.all()
 
 
