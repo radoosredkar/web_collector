@@ -15,6 +15,7 @@ url_nepremicnine = "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-okolic
 
 
 def refresh():
+    app.logger.info("Refresh triggered")
     db.sesson = Sesson()
     all_changed_items = 0
     all_changed_items = all_changed_items + bolha.scrapp(url_bolha)

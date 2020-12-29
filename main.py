@@ -39,9 +39,9 @@ def refresh():
 
 
 if __name__ == "__main__":
-    logging.getLogger("flask_cors").level = logging.DEBUG
-    logging.getLogger("flask").level = logging.DEBUG
-    logging.info("test")
+    #app.logging.getLogger("flask_cors").level = app.logging.DEBUG
+    #app.logging.getLogger("flask").level = app.logging.DEBUG
+    #app.logging.info("test")
 
     app.run(debug=True, host="0.0.0.0")
 
