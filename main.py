@@ -1,15 +1,16 @@
+import ipdb
 from flask import Flask
 from flask import request
 from flask_graphql import GraphQLView
 from flask_cors import CORS, cross_origin
-from .schemas import schema
-from . import scrappy
-from . import ParserBolha as bolha
-from . import ParserNepremicnine as nepremicnine
-import logging
+from web_collector import schemas
+import scrappy
+from web_collector.scrapper import ParserBolha as bolha
+from web_collector.scrapper import ParserNepremicnine as nepremicnine
 
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
+from web_collector import log
 
 sentry_sdk.init(
     dsn="https://c457a3b783ea4c2ca406263f30086806@o371271.ingest.sentry.io/5556585",
@@ -17,31 +18,32 @@ sentry_sdk.init(
     traces_sample_rate=1.0,
 )
 
+
 app = Flask(__name__)
 cors = CORS(app)
 # cors = CORS(app, resources={r"/*": {"origins": "http://localhost:8080/"}})
 app.logger.info(cors)
 app.add_url_rule(
-    "/graphql", view_func=GraphQLView.as_view("graphql", schema=schema, graphiql=True)
+    "/graphql", view_func=GraphQLView.as_view("graphql", schema=schemas.schema, graphiql=True)
 )
 app.add_url_rule(
     "/graphql/batch",
-    view_func=GraphQLView.as_view("graphqlb", schema=schema, batch=True, method="POST"),
+    view_func=GraphQLView.as_view("graphqlb", schema=schemas.schema, batch=True, method="POST"),
 )
 
 
 @app.route("/refresh")
 def refresh():
-    print(1 / 0)
+    # print(1 / 0)
     return scrappy.refresh()
 
 
 if __name__ == "__main__":
-    logging.getLogger("flask_cors").level = logging.DEBUG
-    logging.getLogger("flask").level = logging.DEBUG
-    logging.info("test")
+    #app.logging.getLogger("flask_cors").level = app.logging.DEBUG
+    #app.logging.getLogger("flask").level = app.logging.DEBUG
+    #app.logging.info("test")
 
-    # app.run(debug=True, host="0.0.0.0")
+    app.run(debug=True, host="0.0.0.0")
 
 
 # @app.before_request

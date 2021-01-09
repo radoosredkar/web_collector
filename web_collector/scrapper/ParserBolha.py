@@ -1,13 +1,10 @@
+import ipdb
 from datetime import datetime, timedelta
 import bs4
 from bs4 import BeautifulSoup
 import requests
-from .log import logger
-from . import log
-from . import scrappy_db as db
-
-log.setLoggingFile(__name__)
-log.setStreamHandler(None)
+from web_collector.scrapper import scrappy_db as db
+from flask import current_app as app
 
 
 class ExtractorDesc(object):
@@ -64,31 +61,38 @@ class Parser:
             self.title.item = self.item
 
 
+from datadog import initialize, statsd
+
+options = {"statsd_host": "127.0.0.1", "statsd_port": 8125}
+
+initialize(**options)
+
+
 def scrapp(url: str):
     new_items = 0
     for pageNum in range(1, 100):
-        logger.info(f"parsing page {pageNum}")
+        # app.logger.info("A" * 200)
+        app.logger.info(f"parsing page {pageNum}")
         # print(f"parsing page {pageNum}")
         page: requests.models.Response = requests.get(url.format(page=pageNum))
         soup: bs4.BeautifulSoup = BeautifulSoup(page.content, "html.parser")
         stop_element = soup.find(class_="brdr_top ad_item")
         if not stop_element:
             all_items = soup.find_all(class_="EntityList-item")
-            logger.debug(f"{len(all_items)} items found")
+            app.logger.debug(f"{len(all_items)} items found")
             for item in all_items:
+                statsd.increment("example_metric.increment", tags=["environment:bolha"])
                 parser: Parser = Parser(item)
                 if parser.title and parser.desc:
-                    # print("title", parser.title)
-                    # print("desc", parser.desc)
-                    # print("date", parser.date_created)
-                    # print("price", parser.price)
-                    # print("web_id", parser.web_id)
-                    # print("image", parser.image)
-                    # print("adv_url", parser.adv_url)
+                    app.logger.debug(f" {parser} item found.")
                     if db.db_add(parser):
+                        app.logger.info(f"New record added {parser}")
+                        statsd.increment(
+                            "example_metric.increment", tags=["environment:db"]
+                        )
                         new_items += 1
         else:
-            logger.info(f"Commiting to db {new_items} new items")
+            app.logger.info(f"Commiting to db {new_items} new items")
             break
-    logger.info(f"Commiting to db {new_items} new items")
+    app.logger.info(f"Commiting to db {new_items} new items")
     return new_items
