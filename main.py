@@ -31,7 +31,6 @@ app.add_url_rule(
     view_func=GraphQLView.as_view("graphqlb", schema=schemas.schema, batch=True, method="POST"),
 )
 
-
 @app.route("/refresh")
 def refresh():
     # print(1 / 0)
