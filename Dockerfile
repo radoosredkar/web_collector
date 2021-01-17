@@ -4,6 +4,7 @@ FROM python:3.8
 # set the working directory in the container
 RUN apt-get update && apt-get install -y vim
 RUN mkdir /usr/src/web_collector
+RUN mkdir /var/log/web_collector
 WORKDIR /usr/src/web_collector
 
 RUN /usr/local/bin/python -m pip install --upgrade pip
