@@ -20,4 +20,9 @@ services:
       - ~/sw/javascript/web_collector_front:/usr/app
     ports: 
       - "8081:8080"
+    environment:
+      - HOST=0.0.0.0
+#  cron:
+#    container_name: cronjobs
+#    build: ~/sw/python/web_collector_cron
   #command: /usr/bin/run
