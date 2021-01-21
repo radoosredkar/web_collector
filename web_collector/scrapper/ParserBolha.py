@@ -1,4 +1,4 @@
-import ipdb
+
 from datetime import datetime, timedelta
 import bs4
 from bs4 import BeautifulSoup
@@ -88,7 +88,7 @@ def scrapp(url: str):
                     if db.db_add(parser):
                         app.logger.info(f"New record added {parser}")
                         statsd.increment(
-                            "example_metric.increment", tags=["environment:db"]
+                            "example_metric.increment", tags=["environment:db_bolha"]
                         )
                         new_items += 1
         else:

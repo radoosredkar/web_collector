@@ -28,10 +28,9 @@ dictConfig(
                 "backupCount": 5
             },
         },
-        "root": {"level": "DEBUG", "handlers": ["stdout", "file"]},
+        "root": {"level": "INFO", "handlers": ["stdout", "file"]},
     }
 )
-
 
 def setStreamHandler(stream=stdout):
     if stream:
