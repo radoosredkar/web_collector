@@ -4,11 +4,12 @@ FROM python:3.8
 # set the working directory in the container
 RUN apt-get update && apt-get install -y vim
 RUN mkdir /usr/src/web_collector
+RUN mkdir /var/log/web_collector
 WORKDIR /usr/src/web_collector
 
 RUN /usr/local/bin/python -m pip install --upgrade pip
 # Install datadog
-RUN DD_AGENT_MAJOR_VERSION=7 DD_API_KEY=b334526fa9c49d04c46d73fe9640772b DD_SITE="datadoghq.eu" bash -c "$(curl -L https://s3.amazonaws.com/dd-agent/scripts/install_script.sh)"
+RUN DD_AGENT_MAJOR_VERSION=7 DD_API_KEY=<ADD KEY> DD_SITE="datadoghq.eu" bash -c "$(curl -L https://s3.amazonaws.com/dd-agent/scripts/install_script.sh)"
 RUN pip install datadog
 EXPOSE 5001
 RUN service datadog-agent restart

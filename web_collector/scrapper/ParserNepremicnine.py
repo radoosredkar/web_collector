@@ -86,7 +86,6 @@ def scrapp(url:str):
             break
         app.logger.info(f"{len(all_items)} items found")
         for item in all_items:
-            #app.logger.info("B" * 200)
             statsd.increment('example_metric.increment', tags=["environment:nepremicnine"])
             parser: Parser = Parser(item)
             if parser.title and parser.desc:
@@ -96,9 +95,10 @@ def scrapp(url:str):
                 parser.image = parser.image.replace(
                     "sIonep", "slonep"
                 )  # quickfix because of Beautifuls soup's invalid parsing of l
+                parser.adv_url = f"https://www.nepremicnine.net/oglasi-prodaja/{parser.adv_url.split('/')[-2]}/"
                 if db.db_add(parser):
                     app.logger.info(f"New record added {parser}")
-                    statsd.increment('example_metric.increment', tags=["environment:db"])
+                    statsd.increment('example_metric.increment', tags=["environment:db_nepremicnine"])
                     new_items += 1
     app.logger.info(f"Commiting to db {new_items} new items")
     return new_items
