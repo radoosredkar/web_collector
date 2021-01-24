@@ -1,5 +1,6 @@
 *.key
 Dockerfile_DEV
+settings_DEV.yaml
 # venv
 web_collector_venv/*
 # Byte-compiled / optimized / DLL files

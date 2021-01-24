@@ -1,6 +1,7 @@
 db:
   name: app.db  
   path: migrations/
-  url: mysql://root:password@db:3306/db?charset=utf8
+  url: mysql://root:SETPWS@db:3306/db?charset=utf8
 sentry:
-  dsn: "https://c457a3b783ea4c2ca406263f30086806@o371271.ingest.sentry.io/5556585"
+#Senty dns has to be updated
+  dsn: "https://999999999999999999999@o371271.ingest.sentry.io/888888"
