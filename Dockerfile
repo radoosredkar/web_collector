@@ -2,7 +2,8 @@
 FROM python:3.8
 
 # set the working directory in the container
-RUN apt-get update && apt-get install -y vim
+RUN apt-get update && apt-get install -y vim & apt-get install -y default-libmysqlclient-dev
+# prerequisites for mysql
 RUN mkdir /usr/src/web_collector
 RUN mkdir /var/log/web_collector
 WORKDIR /usr/src/web_collector

@@ -16,12 +16,36 @@ services:
   wsfront:
     container_name: wsfront
     build: ~/sw/javascript/web_collector_front
+    environment:
+    - HOST=0.0.0.0
     volumes: 
       - ~/sw/javascript/web_collector_front:/usr/app
     ports: 
       - "8081:8080"
     environment:
       - HOST=0.0.0.0
+  db:
+    container_name: db
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'db'
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: 'homes'
+      # You can use whatever password you like
+      MYSQL_PASSWORD: 'password'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - my-db:/var/lib/mysql
+# Names our volume
+volumes:
+  my-db:
 #  cron:
 #    container_name: cronjobs
 #    build: ~/sw/python/web_collector_cron
