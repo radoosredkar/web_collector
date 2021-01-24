@@ -9,10 +9,11 @@ WORKDIR /usr/src/web_collector
 
 RUN /usr/local/bin/python -m pip install --upgrade pip
 # Install datadog
-RUN DD_AGENT_MAJOR_VERSION=7 DD_API_KEY=<ADD KEY> DD_SITE="datadoghq.eu" bash -c "$(curl -L https://s3.amazonaws.com/dd-agent/scripts/install_script.sh)"
-RUN pip install datadog
+# For successful build we have to disable datadog on docker hub
+#RUN DD_AGENT_MAJOR_VERSION=7 DD_API_KEY=<ADD KEY> DD_SITE="datadoghq.eu" bash -c "$(curl -L https://s3.amazonaws.com/dd-agent/scripts/install_script.sh)"
+#RUN pip install datadog
 EXPOSE 5001
-RUN service datadog-agent restart
+#RUN service datadog-agent restart
 
 # copy the dependencies file to the working directory
 COPY web_collector/requirements.txt .
