@@ -20,12 +20,12 @@ import sys
 import os
 from os.path import abspath, dirname
 
-sys.path.insert(0, os.getcwd())  # Insert <.>/src
-from models import Base
+#sys.path.insert(0, os.getcwd())  # Insert <.>/src
+sys.path.insert(0, '/home/radoo/sw/python/web_collector')  # Insert <.>/src
+from web_collector.models import Base
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-config.set_main_option("sqlalchemy.url", "sqlite:///" + os.path.join(basedir,
-                                                                     "app.db"))
+#basedir = os.path.abspath(os.path.dirname(__file__))
+#config.set_main_option("sqlalchemy.url", "sqlite:///" + os.path.join(basedir, "app.db"))
 
 
 # from myapp import mymodel

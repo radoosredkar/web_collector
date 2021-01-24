@@ -7,8 +7,6 @@ from web_collector import log
 from flask import current_app as app
 
 
-#log.setLoggingFile(__name__)
-#log.setStreamHandler(None)
 class Homes(SQLAlchemyObjectType):
     class Meta:
         model = HomesModel

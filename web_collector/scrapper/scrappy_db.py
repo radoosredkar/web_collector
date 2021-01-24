@@ -32,7 +32,6 @@ def db_add(item):
         adv_url=adv_url,
     )
 
-    # print(f"X{created}X")
     existing_sr = (
         sesson.query(HomesModel).filter(HomesModel.web_id == f"{web_id}").first()
     )
