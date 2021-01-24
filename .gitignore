@@ -1,3 +1,5 @@
+Dockerfile_DEV
+*.key
 # venv
 web_collector_venv/*
 # Byte-compiled / optimized / DLL files
