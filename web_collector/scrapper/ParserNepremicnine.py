@@ -6,10 +6,6 @@ import requests
 from web_collector.scrapper import scrappy_db as db
 from flask import current_app as app
 
-#log.setLoggingFile(__name__)
-#log.setStreamHandler(None)
-
-
 class ExtractorDesc(object):
     item = None
     """A data descriptor that extracts data from BeautifulSoup item"""
@@ -73,7 +69,6 @@ def scrapp(url:str):
     new_items = 0
     for pageNum in range(1, 10):
         app.logger.info(f"parsing page {pageNum}")
-        # print(f"parsing page {pageNum}")
         page: requests.models.Response = requests.get(
             url.format(page=pageNum)
         )

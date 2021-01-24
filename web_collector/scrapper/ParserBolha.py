@@ -1,4 +1,3 @@
-
 from datetime import datetime, timedelta
 import bs4
 from bs4 import BeautifulSoup
@@ -73,7 +72,6 @@ def scrapp(url: str):
     for pageNum in range(1, 100):
         # app.logger.info("A" * 200)
         app.logger.info(f"parsing page {pageNum}")
-        # print(f"parsing page {pageNum}")
         page: requests.models.Response = requests.get(url.format(page=pageNum))
         soup: bs4.BeautifulSoup = BeautifulSoup(page.content, "html.parser")
         stop_element = soup.find(class_="brdr_top ad_item")
