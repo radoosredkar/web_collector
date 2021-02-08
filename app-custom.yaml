@@ -1,0 +1,9 @@
+runtime: custom
+env: flex
+entrypoint: gunicorn --bind:$PORT main:app
+env_variables:
+  FLASK_APP: "main.py"
+  FLASK_ENV: "development"
+network:
+  forwarded_ports:
+    - 5000/tcp

@@ -1,0 +1,10 @@
+steps:
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: 'bash'
+  args: ['-c', 'gcloud config set app/cloud_build_timeout 1600 && gcloud app deploy']
+  secretEnv: ['DB_PASSWORD']
+timeout: '1600s'
+availableSecrets:
+  secretManager:
+  - versionName: projects/533861754708/secrets/web-collector-db_password/versions/1
+    env: 'DB_PASSWORD'

@@ -36,6 +36,10 @@ app.add_url_rule(
 )
 
 
+@app.route("/")
+def root():
+    return f"OK"
+
 @app.route("/refresh")
 def refresh():
     return scrappy.refresh()
@@ -46,7 +50,7 @@ if __name__ == "__main__":
     # app.logging.getLogger("flask").level = app.logging.DEBUG
     # app.logging.info("test")
 
-    app.run(debug=True, host="0.0.0.0")
+    app.run(debug=True, host="127.0.0.1", port=8080)
 
 
 # @app.before_request

@@ -6,6 +6,7 @@ services:
     environment:
       - FLASK_ENV=development
       - FLASK_APP=main.py
+      - DEVELOPMENT=true
     volumes: 
       - ~/sw/python/web_collector:/usr/src/web_collector
       - ~/var/log/web_collector:/var/log/web_collector

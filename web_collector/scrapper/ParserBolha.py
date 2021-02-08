@@ -60,11 +60,11 @@ class Parser:
             self.title.item = self.item
 
 
-from datadog import initialize, statsd
+#from datadog import initialize, statsd
 
-options = {"statsd_host": "127.0.0.1", "statsd_port": 8125}
+#options = {"statsd_host": "127.0.0.1", "statsd_port": 8125}
 
-initialize(**options)
+#initialize(**options)
 
 
 def scrapp(url: str):
@@ -79,15 +79,15 @@ def scrapp(url: str):
             all_items = soup.find_all(class_="EntityList-item")
             app.logger.debug(f"{len(all_items)} items found")
             for item in all_items:
-                statsd.increment("example_metric.increment", tags=["environment:bolha"])
+                #statsd.increment("example_metric.increment", tags=["environment:bolha"])
                 parser: Parser = Parser(item)
                 if parser.title and parser.desc:
                     app.logger.debug(f" {parser} item found.")
                     if db.db_add(parser):
                         app.logger.info(f"New record added {parser}")
-                        statsd.increment(
-                            "example_metric.increment", tags=["environment:db_bolha"]
-                        )
+                        #statsd.increment(
+                        #    "example_metric.increment", tags=["environment:db_bolha"]
+                        #)
                         new_items += 1
         else:
             app.logger.info(f"Commiting to db {new_items} new items")
