@@ -38,7 +38,7 @@ app.add_url_rule(
 
 @app.route("/")
 def root():
-    return f"OK"
+    return f"App is online ..."
 
 @app.route("/refresh")
 def refresh():
