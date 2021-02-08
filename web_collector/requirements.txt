@@ -15,6 +15,12 @@ graphql-core==2.3.2
 graphql-relay==2.0.1
 graphql-server-core==1.2.0
 gunicorn==20.0.4
+google-api-core==1.25.1
+google-auth==1.25.0
+google-cloud==0.34.0
+google-cloud-secret-manager==2.2.0
+googleapis-common-protos==1.52.0
+grpc-google-iam-v1==0.12.3
 datadog==0.39.0
 idna==2.10
 ipdb==0.13.3
@@ -34,6 +40,7 @@ promise==2.3
 prompt-toolkit==3.0.5
 ptyprocess==0.6.0
 Pygments==2.6.1
+PyMySQL==1.0.2
 python-dateutil==2.8.1
 python-editor==1.0.4
 requests==2.24.0
