@@ -57,13 +57,13 @@ class Parser:
         if attr == "title":
             self.title.item = self.item
 
-from datadog import initialize, statsd
-options = {
-    'statsd_host':'127.0.0.1',
-    'statsd_port':8125
-}
+#from datadog import initialize, statsd
+#options = {
+#    'statsd_host':'127.0.0.1',
+#    'statsd_port':8125
+#}
 
-initialize(**options)
+#initialize(**options)
 
 def scrapp(url:str):
     new_items = 0
@@ -81,7 +81,7 @@ def scrapp(url:str):
             break
         app.logger.info(f"{len(all_items)} items found")
         for item in all_items:
-            statsd.increment('example_metric.increment', tags=["environment:nepremicnine"])
+            #statsd.increment('example_metric.increment', tags=["environment:nepremicnine"])
             parser: Parser = Parser(item)
             if parser.title and parser.desc:
                 app.logger.debug(f" {parser} item found.")
@@ -93,7 +93,7 @@ def scrapp(url:str):
                 parser.adv_url = f"https://www.nepremicnine.net/oglasi-prodaja/{parser.adv_url.split('/')[-2]}/"
                 if db.db_add(parser):
                     app.logger.info(f"New record added {parser}")
-                    statsd.increment('example_metric.increment', tags=["environment:db_nepremicnine"])
+                    #statsd.increment('example_metric.increment', tags=["environment:db_nepremicnine"])
                     new_items += 1
     app.logger.info(f"Commiting to db {new_items} new items")
     return new_items
