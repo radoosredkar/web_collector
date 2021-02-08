@@ -1,4 +1,5 @@
 *.key
+AlembicDbUrl
 Dockerfile_DEV
 settings_DEV.yaml
 # venv

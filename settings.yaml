@@ -1,6 +1,7 @@
 db:
   name: app.db  
   path: migrations/
+  user: root
   url: mysql://root:SETPWS@db:3306/db?charset=utf8
 sentry:
 #Senty dns has to be updated
