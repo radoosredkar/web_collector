@@ -3,7 +3,7 @@ import bs4
 from bs4 import BeautifulSoup
 import requests
 from web_collector.scrapper import scrappy_db as db
-from flask import current_app as app
+from app import app
 
 
 class ExtractorDesc(object):
