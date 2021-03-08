@@ -20,7 +20,7 @@ sentry_sdk.init(
 )
 
 cors = CORS(app)
-# cors = CORS(app, resources={r"/*": {"origins": "http://localhost:8080/"}})
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 app.logger.info(cors)
 app.add_url_rule(
     "/graphql",
@@ -37,6 +37,7 @@ app.add_url_rule(
 @app.route("/")
 def root():
     return f"App is online ..."
+
 
 @app.route("/refresh")
 def refresh():

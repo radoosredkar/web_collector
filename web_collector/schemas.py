@@ -1,98 +1,77 @@
 import graphene
-from web_collector.models import HomesModel
 from graphene_sqlalchemy import SQLAlchemyObjectType
 from sqlalchemy import and_
-from web_collector.db import Sesson
 from web_collector import log
 from flask import current_app as app
+from graphene import ObjectType, String, Int, Field, List
+from web_collector.db_firestore import db
 
 
-class Homes(SQLAlchemyObjectType):
-    class Meta:
-        model = HomesModel
+class Home(ObjectType):
+    id = String()
+    title = String()
+    description = String()
+    source = String()
+    price = String()
+    adv_url = String()
+    date_created = String()
+    date_found = String()
+    image = String()
+    archived = Int()
 
-class UpdateComment(graphene.Mutation):
-    class Arguments:
-        ident = graphene.Int()
-        comment = graphene.String()
+    def __init__(self, homes_dict, ident):
+        self.id = ident
+        for keys, values in homes_dict.items():
+            app.logger.info(keys + " " + str(values))
+            setattr(self, keys, values)
 
-    home = graphene.Field(Homes)
+    def resolve_id(self, info):
+        return f"{self.id}"
 
-    def mutate(root, info, ident, comment):
-        query = Homes.get_query(info)
-        if ident:
-            session = Sesson()
-            home: HomesModel = query.get(ident)
-            home.comment = comment
-            session.commit()
-        return UpdateComment(home=home)
+    def resolve_title(self, info):
+        return f"{self.title}"
 
+    def resolve_description(self, info):
+        return f"{self.desc}"
 
-class MyMutations(graphene.ObjectType):
-    update_comment = UpdateComment.Field()
+    def resolve_source(self, info):
+        return f"{self.source}"
 
+    def resolve_price(self, info):
+        return f"{self.price}"
 
-class Query(graphene.ObjectType):
-    homes = graphene.List(Homes)
-    home = graphene.List(
-        Homes,
-        ident=graphene.Int(),
-        title=graphene.String(),
-        comment=graphene.String(),
-        desc=graphene.String(),
-        date_created=graphene.Date(),
-        date_found=graphene.Date(),
-        source=graphene.String(),
-        web_id=graphene.String(),
-        price_to=graphene.Float(),
-        price_from=graphene.Float(),
-        image=graphene.String(),
-        adv_url=graphene.String(),
-        archived=graphene.Int(),
-    )
+    def resolve_adv_url(self, info):
+        return f"{self.adv_url}"
 
-    def resolve_homes(self, info):
-        query = Homes.get_query(info)
-        return query.all()
-
-    def resolve_home(self, info, **args):
-        app.logger.debug("resolve_home %s", args)
-        ident = args.get("ident")
-        title = args.get("title")
-        comment = args.get("comment")
-        description = args.get("desc")
-        archived = args.get("archived")
-        price_from = args.get("price_from")
-        price_to = args.get("price_to")
-
-        flt = []
-        if ident:
-            app.logger.debug("Searching by id %s", ident)
-            flt.append(HomesModel.id == ident)
-        if title:
-            flt.append((HomesModel.title.contains(title)))
-        if comment:
-            flt.append((HomesModel.comment.contains(comment)))
-        if description:
-            flt.append((HomesModel.description.contains(description)))
-        if archived:
-            flt.append(HomesModel.archived == 1)
-        if not archived:
-            flt.append(HomesModel.archived == 0)
-        if price_to:
-            flt.append((HomesModel.price <= price_to))
-        if price_from:
-            flt.append((HomesModel.price >= price_from))
-        if price_from and price_to:
-            flt.append(
-                and_((HomesModel.price >= price_from), (HomesModel.price <= price_to))
-            )
-
-        query = Homes.get_query(info)
-
-        sql = query.filter(*flt)
-        app.logger.debug(sql)
-        return sql.all()
+    def resolve_date_created(self, info):
+        return f"{self.date_created}"
 
 
-schema = graphene.Schema(query=Query, mutation=MyMutations)
+    def resolve_image(self, info):
+        return f"{self.image}"
+
+    def resolve_archived(self, info):
+        return f"{self.archived}"
+
+
+class Query(ObjectType):
+    home = graphene.Field(Home)
+    homes = List(Home, archived=Int(default_value=0))
+
+    def resolve_home(self, info):
+        return Home(title="test", ident=123)
+
+    def resolve_homes(self, info, archived):
+        homes_ref = db.collection("homes_dev")
+        docs = homes_ref.stream()
+        homes = []
+        for doc in docs:
+            home_dict = doc.to_dict()
+            # app.logger.info(home_dict)
+            home = Home(home_dict, doc.id)
+            if home.archived == archived:
+                homes.append(home)
+        return homes
+
+
+schema = graphene.Schema(query=Query)
