@@ -5,6 +5,7 @@ import os
 from config import settings
 import MySQLdb
 from google.cloud import secretmanager
+from app import app
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 file_path = os.path.abspath(basedir + f"/{settings.db.path}/{settings.db.name}")
@@ -15,8 +16,10 @@ cloud_sql_connection_name = "web-collector-deploy-303917:europe-west1:db"
 
 #Read from secret POC
 if os.environ.get("DEVELOPMENT"):
+    app.logger.info(f"Development db loaded on url {settings.db.url}")
     engine = create_engine(settings.db.url)
 else:
+    app.logger.info("Production db loaded")
     client = secretmanager.SecretManagerServiceClient()
     secret_name = "web-collector-db_password"
     project_id = "web-collector-deploy-303917"

@@ -1,6 +1,6 @@
 import os
 import yaml
-import ipdb
+from app import app
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -13,8 +13,14 @@ class dict2obj(object):
         if type(value) == type({}):
             return dict2obj(value)
         return value
+if os.environ.get("DEVELOPMENT"):
+    app.logger.debug("Development config loaded") 
+    settings_file_name = "settings_DEV.yaml"
+else:
+    app.logger.debug("Production config loaded") 
+    settings_file_name = "settings.yaml"
 
-with open(f"{basedir}/settings.yaml", "r") as settings_file:
+with open(f"{basedir}/{settings_file_name}", "r") as settings_file:
     settings: dict = dict2obj(yaml.safe_load(settings_file))
 
 class Configold(object):

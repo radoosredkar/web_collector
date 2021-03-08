@@ -1,5 +1,3 @@
-import ipdb
-from flask import Flask
 from flask import request
 from flask_graphql import GraphQLView
 from flask_cors import CORS, cross_origin
@@ -7,6 +5,7 @@ from web_collector import schemas
 import scrappy
 from web_collector.scrapper import ParserBolha as bolha
 from web_collector.scrapper import ParserNepremicnine as nepremicnine
+from app import app
 
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
@@ -20,7 +19,6 @@ sentry_sdk.init(
     traces_sample_rate=1.0,
 )
 
-app = Flask(__name__)
 cors = CORS(app)
 # cors = CORS(app, resources={r"/*": {"origins": "http://localhost:8080/"}})
 app.logger.info(cors)
