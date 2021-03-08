@@ -2,7 +2,7 @@
 Finding apartments of intrest on various web sources
 
 TODO:
-- Check how to add secrets to alembic
+
 - Is it safe to injec secrets to env on build?
 - check redis sessions
 - add cleaning of records, or better archieving
@@ -26,6 +26,8 @@ DONE
 - check wierd urls
 - add commenting for choosen apartments
 
+CANCELED
+- Check how to add secrets to alembic
 Docker commands:
 ```
 sudo docker build -t wscr web_collector 
