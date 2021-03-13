@@ -1,10 +1,18 @@
 from datetime import datetime, timedelta
 from web_collector.models import HomesModel
-from flask import current_app as app
+from app import app
 from web_collector.db_firestore import db
+import os
 
 
 sesson = None
+
+if os.environ.get("DEVELOPMENT"):
+    homes_collection_name = "homes_dev"
+else:
+    homes_collection_name = "homes"
+app.logger.debug("Homes collection name %s ", homes_collection_name)
+
 
 def db_add(item):
     title = item.title
@@ -18,9 +26,9 @@ def db_add(item):
 
     to_log = (title, web_id, price, source, date_created, image, adv_url)
 
-    app.logger.debug("creating record %s ", to_log)
+    app.logger.debug("working with record %s ", to_log)
 
-    doc_ref = db.collection(u'homes_dev').document(f"{web_id}")
+    doc_ref = db.collection(homes_collection_name).document(f"{web_id}")
     doc = doc_ref.get()
     if not doc.exists:
         app.logger.debug("creating document %s ", web_id)
