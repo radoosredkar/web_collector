@@ -6,6 +6,7 @@ from web_collector.scrapper import scrappy_db as db
 from flask import current_app as app
 from web_collector.db_firestore import db
 from config import settings
+import web_collector.db_firestore as db_firestore
 
 from datetime import datetime
 from random import randrange
@@ -23,8 +24,9 @@ def refresh():
     now = datetime.now()
     document_id = now.strftime("%Y%m%d-%H%M%S") + str(randrange(10000, 99999))
 
-    doc_ref = db.collection(settings.collections.logs).document(f"{document_id}")
+    doc_ref = db_firestore.get_document_ref(settings.collections.logs, document_id)
     doc = doc_ref.get()
+
     doc_ref.set({
        u'action': 'refresh',
        u'datetime': now

@@ -1,18 +1,12 @@
 from datetime import datetime, timedelta
 from web_collector.models import HomesModel
 from app import app
-from web_collector.db_firestore import db
+import web_collector.db_firestore as db_firestore
 import os
+from config import settings
 
 
 sesson = None
-
-if os.environ.get("DEVELOPMENT"):
-    homes_collection_name = "homes_dev"
-else:
-    homes_collection_name = "homes"
-app.logger.debug("Homes collection name %s ", homes_collection_name)
-
 
 def db_add(item):
     title = item.title
@@ -28,8 +22,9 @@ def db_add(item):
 
     app.logger.debug("working with record %s ", to_log)
 
-    doc_ref = db.collection(homes_collection_name).document(f"{web_id}")
+    doc_ref = db_firestore.get_document_ref(settings.collections.logs, web_id)
     doc = doc_ref.get()
+
     if not doc.exists:
         app.logger.debug("creating document %s ", web_id)
         doc_ref.set({
@@ -41,6 +36,7 @@ def db_add(item):
            u'date_found': datetime.now(),
            u'image': image,
            u'adv_url': adv_url,
+           u'comments': '',
            u'archived': 0
         })
     else:

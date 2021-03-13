@@ -23,11 +23,12 @@ class Home(ObjectType):
     date_found = String()
     image = String()
     archived = Int()
+    comments = String()
 
     def __init__(self, homes_dict, ident):
         self.id = ident
         for keys, values in homes_dict.items():
-            app.logger.info(keys + " " + str(values))
+            #app.logger.info(keys + " " + str(values))
             setattr(self, keys, values)
 
     def resolve_id(self, info):
@@ -57,6 +58,9 @@ class Home(ObjectType):
 
     def resolve_archived(self, info):
         return f"{self.archived}"
+
+    def resolve_comments(self, info):
+        return f"{self.comments}"
 
 
 class Query(ObjectType):

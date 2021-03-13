@@ -12,6 +12,7 @@ from sentry_sdk.integrations.flask import FlaskIntegration
 from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 from web_collector import log
 from config import settings
+from flask import jsonify
 
 sentry_sdk.init(
     dsn=settings.sentry.dsn,
@@ -38,10 +39,19 @@ app.add_url_rule(
 def root():
     return f"App is online ..."
 
+@app.route("/comments/<string:record_id>", methods=['PUT', 'GET'])
+def comment(record_id):
+    app.logger.info(record_id)
+    if request:
+        app.logger.info(request)
+    return f"{record_id} {request.get_data()} {request.method}"
 
 @app.route("/refresh")
 def refresh():
-    return scrappy.refresh()
+    all_changed_items = scrappy.refresh()
+    #return {"all_changed_item": scrappy.refresh()}
+    app.logger.info(f"Refresh finished {all_changed_items}")
+    return {"all_changed_items":all_changed_items}
 
 
 if __name__ == "__main__":
