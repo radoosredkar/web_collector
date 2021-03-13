@@ -5,6 +5,11 @@ from web_collector import log
 from flask import current_app as app
 from graphene import ObjectType, String, Int, Field, List
 from web_collector.db_firestore import db
+import os
+if os.environ.get("DEVELOPMENT"):
+    homes_collection_name = "homes_dev"
+else:
+    homes_collection_name = "homes"
 
 
 class Home(ObjectType):
@@ -62,7 +67,7 @@ class Query(ObjectType):
         return Home(title="test", ident=123)
 
     def resolve_homes(self, info, archived):
-        homes_ref = db.collection("homes_dev")
+        homes_ref = db.collection(homes_collection_name)
         docs = homes_ref.stream()
         homes = []
         for doc in docs:
