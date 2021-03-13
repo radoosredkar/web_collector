@@ -84,7 +84,7 @@ def scrapp(url:str):
             #statsd.increment('example_metric.increment', tags=["environment:nepremicnine"])
             parser: Parser = Parser(item)
             if parser.title and parser.desc:
-                app.logger.debug(f" {parser} item found.")
+                #app.logger.debug(f" {parser} item found.")
                 parser.web_id = item["id"]
 
                 parser.image = parser.image.replace(
