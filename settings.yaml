@@ -6,3 +6,6 @@ db:
 sentry:
 #Senty dns has to be updated
   dsn: "https://999999999999999999999@o371271.ingest.sentry.io/888888"
+collections:
+  logs: homes_logs
+  homes: homes

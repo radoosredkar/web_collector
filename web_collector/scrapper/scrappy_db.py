@@ -1,17 +1,12 @@
 from datetime import datetime, timedelta
 from web_collector.models import HomesModel
 from app import app
-from web_collector.db_firestore import db
+import web_collector.db_firestore as db_firestore
 import os
+from config import settings
 
 
 sesson = None
-
-if os.environ.get("DEVELOPMENT"):
-    homes_collection_name = "homes_dev"
-else:
-    homes_collection_name = "homes"
-app.logger.debug("Homes collection name %s ", homes_collection_name)
 
 
 def db_add(item):
@@ -28,26 +23,27 @@ def db_add(item):
 
     app.logger.debug("working with record %s ", to_log)
 
-    doc_ref = db.collection(homes_collection_name).document(f"{web_id}")
+    doc_ref = db_firestore.get_document_ref(settings.collections.homes, web_id)
     doc = doc_ref.get()
+
     if not doc.exists:
-        app.logger.debug("creating document %s ", web_id)
-        doc_ref.set({
-           u'title': title,
-           u'desc': desc,
-           u'price': price,
-           u'source': source,
-           u'date_created': date_created,
-           u'date_found': datetime.now(),
-           u'image': image,
-           u'adv_url': adv_url,
-           u'archived': 0
-        })
+        db_firestore.insert_document(
+            doc_ref,
+            {
+                "title": title,
+                "desc": desc,
+                "price": price,
+                "source": source,
+                "date_created": date_created,
+                "date_found": datetime.now(),
+                "image": image,
+                "adv_url": adv_url,
+                "comments": "",
+                "archived": 0,
+            },
+        )
     else:
-        app.logger.debug("document %s found", web_id)
-        doc_ref.update({
-           u'date_found': datetime.now()
-        })
+        db_firestore.update_document(doc_ref, {"date_found": datetime.now()})
 
 
 def db_add_sql(item):

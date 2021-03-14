@@ -2,7 +2,6 @@
 Finding apartments of intrest on various web sources
 
 TODO:
-
 - Is it safe to injec secrets to env on build?
 - check redis sessions
 - add cleaning of records, or better archieving
@@ -15,7 +14,7 @@ TODO:
 - add manual move to and from archive
 
 IN PROGRESS
--
+- Adding comment api
 
 DONE
 - deploy to some cloud infrastructire, preferablly AWS (gcp was chosen)
