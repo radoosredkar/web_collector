@@ -25,23 +25,23 @@ def refresh():
     document_id = now.strftime("%Y%m%d-%H%M%S") + str(randrange(10000, 99999))
 
     doc_ref = db_firestore.get_document_ref(settings.collections.logs, document_id)
-    doc = doc_ref.get()
 
-    doc_ref.set({
-       u'action': 'refresh',
-       u'datetime': now
-    })
+    document = {"action": "refresh", "datetime": now}
+    db_firestore.insert_document(doc_ref, document)
+
     app.logger.info("Refresh triggered")
+
     all_changed_items = 0
     app.logger.info("Refreshing bolha")
     all_changed_items = all_changed_items + bolha.scrapp(url_bolha)
     app.logger.debug(f"Bolha refreshed {all_changed_items}")
+
     app.logger.info("Refreshing nepremicnine")
     all_changed_items = all_changed_items + nepremicnine.scrapp(url_nepremicnine)
     app.logger.debug(f"Nepremicnine refreshed {all_changed_items}")
-    doc_ref.update({
-       u'changed_items': all_changed_items
-    })
+
+    db_firestore.update_document(doc_ref, {"changed_items": all_changed_items})
+
     app.logger.info(f"Refresh finished {str(all_changed_items)}")
     return 0
 
