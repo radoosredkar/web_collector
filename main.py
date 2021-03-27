@@ -12,6 +12,9 @@ from sentry_sdk.integrations.flask import FlaskIntegration
 from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 from web_collector import log
 from config import settings
+from flask import jsonify
+import web_collector.db_firestore as db_firestore
+import json
 
 sentry_sdk.init(
     dsn=settings.sentry.dsn,
@@ -33,15 +36,29 @@ app.add_url_rule(
     ),
 )
 
-
 @app.route("/")
 def root():
     return f"App is online ..."
 
+@app.route("/homes/<string:record_id>", methods=['PATCH', 'GET'])
+def comment(record_id):
+    doc_ref = db_firestore.get_document_ref(settings.collections.homes, record_id)
+    if request.method == "PATCH":
+        data = request.get_data()
+        db_firestore.update_document(doc_ref, json.loads(data)) 
+        document = doc_ref.get()
+        return document.to_dict()
+    else:
+        app.logger.error("Document {record_id} not found")
+    app.logger.info(record_id)
+    return f"{record_id} {request.get_data()} {request.method}"
 
 @app.route("/refresh")
 def refresh():
-    return scrappy.refresh()
+    all_changed_items = scrappy.refresh()
+    #return {"all_changed_item": scrappy.refresh()}
+    app.logger.info(f"Refresh finished {all_changed_items}")
+    return {"all_changed_items":all_changed_items}
 
 
 if __name__ == "__main__":

@@ -1,11 +1,12 @@
 import graphene
-from graphene_sqlalchemy import SQLAlchemyObjectType
-from sqlalchemy import and_
 from web_collector import log
 from flask import current_app as app
-from graphene import ObjectType, String, Int, Field, List
+from graphene import ObjectType, Mutation, String, Int, Field, List
 from web_collector.db_firestore import db
+import web_collector.db_firestore as db_firestore
 import os
+from config import settings
+
 if os.environ.get("DEVELOPMENT"):
     homes_collection_name = "homes_dev"
 else:
@@ -23,11 +24,12 @@ class Home(ObjectType):
     date_found = String()
     image = String()
     archived = Int()
+    comments = String()
 
     def __init__(self, homes_dict, ident):
         self.id = ident
         for keys, values in homes_dict.items():
-            app.logger.info(keys + " " + str(values))
+            # app.logger.info(keys + " " + str(values))
             setattr(self, keys, values)
 
     def resolve_id(self, info):
@@ -51,20 +53,46 @@ class Home(ObjectType):
     def resolve_date_created(self, info):
         return f"{self.date_created}"
 
-
     def resolve_image(self, info):
         return f"{self.image}"
 
     def resolve_archived(self, info):
         return f"{self.archived}"
 
+    def resolve_comments(self, info):
+        return f"{self.comments}"
+
+
+class UpdateComment(Mutation):
+    class Arguments:
+        ident = String()
+        comment = String()
+
+    home = graphene.Field(Home)
+
+    def mutate(self, info, ident, comment):
+        doc_ref = db_firestore.get_document_ref(settings.collections.homes, ident)
+        doc = doc_ref.get()
+        if doc.exists:
+            db_firestore.update_document(doc_ref, {"comments": comment})
+            home_dict = doc.to_dict()
+            home = Home(home_dict, ident)
+        else:
+            home = None
+        return UpdateComment(home=home)
+
+
+class Mutation(ObjectType):
+    update_comment = UpdateComment.Field()
+
 
 class Query(ObjectType):
-    home = graphene.Field(Home)
+    home = graphene.Field(Home, ident=String())
     homes = List(Home, archived=Int(default_value=0))
 
-    def resolve_home(self, info):
-        return Home(title="test", ident=123)
+    def resolve_home(self, info, ident):
+        doc_ref = db_firestore.get_document_ref(settings.collections.homes, ident)
+        return Home(doc_ref.get().to_dict(), ident)
 
     def resolve_homes(self, info, archived):
         homes_ref = db.collection(homes_collection_name)
@@ -79,4 +107,4 @@ class Query(ObjectType):
         return homes
 
 
-schema = graphene.Schema(query=Query)
+schema = graphene.Schema(query=Query, mutation=Mutation)
