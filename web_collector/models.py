@@ -1,10 +1,9 @@
 from sqlalchemy import Integer, String, Column, Date, text, Text
 from sqlalchemy.ext.declarative import declarative_base
-from web_collector.db import Sesson
 
 
 Base = declarative_base()
-Base.query = Sesson.query_property()
+#Base.query = Sesson.query_property()
 
 
 class HomesModel(Base):
