@@ -1,4 +1,3 @@
-from web_collector.db import Sesson
 import sys
 from web_collector.scrapper import ParserBolha as bolha
 from web_collector.scrapper import ParserNepremicnine as nepremicnine
