@@ -25,6 +25,7 @@ class Home(ObjectType):
     image = String()
     archived = Int()
     comments = String()
+    type = String()
 
     def __init__(self, homes_dict, ident):
         self.id = ident
@@ -61,6 +62,9 @@ class Home(ObjectType):
 
     def resolve_comments(self, info):
         return f"{self.comments}"
+
+    def resolve_type(self, info):
+        return f"{self.type}"
 
 
 class UpdateComment(Mutation):

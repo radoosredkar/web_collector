@@ -6,11 +6,11 @@ import os
 from app import app
 
 if os.environ.get("DEVELOPMENT"):
-    cred = credentials.Certificate("web-collector-db-a5211541cd82.json")
+    cred = credentials.Certificate("web-collector-db-b43111a86bb6.json")
     firebase_admin.initialize_app(cred)
     db = firestore.client()
 else:
-    cred = credentials.Certificate("web-collector-db-a5211541cd82.json")
+    cred = credentials.Certificate("web-collector-db-b43111a86bb6.json")
     firebase_admin.initialize_app(cred)
     db = firestore.client()
 

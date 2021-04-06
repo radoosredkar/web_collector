@@ -4,9 +4,12 @@ from app import app
 import web_collector.db_firestore as db_firestore
 import os
 from config import settings
+from enum import Enum
 
 
 sesson = None
+
+RECORD_TYPE = Enum("RECORD_TYPE", "NEW_RECORD CANDIDATE NOT_CANDIDATE")
 
 
 def db_add(item):
@@ -25,7 +28,6 @@ def db_add(item):
 
     doc_ref = db_firestore.get_document_ref(settings.collections.homes, web_id)
     doc = doc_ref.get()
-
     if not doc.exists:
         db_firestore.insert_document(
             doc_ref,
@@ -40,10 +42,15 @@ def db_add(item):
                 "adv_url": adv_url,
                 "comments": "",
                 "archived": 0,
+                "type": RECORD_TYPE.NEW_RECORD.name,
             },
         )
     else:
-        db_firestore.update_document(doc_ref, {"date_found": datetime.now()})
+        db_firestore.update_document(doc_ref, 
+        {
+            "date_found": datetime.now(),
+            "type": RECORD_TYPE.CANDIDATE.name
+        })
 
 
 def db_add_sql(item):
