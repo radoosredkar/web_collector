@@ -1,11 +1,11 @@
 import sys
 from web_collector.scrapper import ParserBolha as bolha
 from web_collector.scrapper import ParserNepremicnine as nepremicnine
-from web_collector.scrapper import scrappy_db as db
 from flask import current_app as app
 from web_collector.db_firestore import db
 from config import settings
 import web_collector.db_firestore as db_firestore
+from web_collector.scrapper.scrappy_db import RECORD_TYPE as RECORD_TYPE
 
 from datetime import datetime
 from random import randrange
@@ -32,14 +32,23 @@ def refresh():
 
     all_changed_items = 0
     app.logger.info("Refreshing bolha")
-    all_changed_items = all_changed_items + bolha.scrapp(url_bolha)
+    # all_changed_items = all_changed_items + bolha.scrapp(url_bolha)
     app.logger.debug(f"Bolha refreshed {all_changed_items}")
 
     app.logger.info("Refreshing nepremicnine")
-    all_changed_items = all_changed_items + nepremicnine.scrapp(url_nepremicnine)
+    # all_changed_items = all_changed_items + nepremicnine.scrapp(url_nepremicnine)
     app.logger.debug(f"Nepremicnine refreshed {all_changed_items}")
 
     db_firestore.update_document(doc_ref, {"changed_items": all_changed_items})
+    homes_coll = db_firestore.get_collection(settings.collections.homes)
+    for home in homes_coll:
+        parsed = home.to_dict()
+        timedelta = parsed["date_found"] - parsed["date_created"]
+        if timedelta.days > settings.db.age_to_archive_days:
+            app.logger.debug("Archieving document with timedelta %s", timedelta)
+            db_firestore.update_document(
+                home.reference, {"type": RECORD_TYPE.ARCHIVED.name}
+            )
 
     app.logger.info(f"Refresh finished {str(all_changed_items)}")
     return 0
