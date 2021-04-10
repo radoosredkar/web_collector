@@ -45,12 +45,14 @@ def db_add(item):
                 "type": RECORD_TYPE.NEW_RECORD.name,
             },
         )
+        return True
     else:
         db_firestore.update_document(doc_ref, 
         {
             "date_found": datetime.now(),
             "type": RECORD_TYPE.CANDIDATE.name
         })
+        return False #Did not add
 
 
 def db_add_sql(item):
