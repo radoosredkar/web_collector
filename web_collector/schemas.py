@@ -1,17 +1,25 @@
 import graphene
 from web_collector import log
 from flask import current_app as app
-from graphene import ObjectType, Mutation, String, Int, Field, List
+from graphene import ObjectType, Mutation, String, Int, Field, List, Enum
 from web_collector.db_firestore import db
 import web_collector.db_firestore as db_firestore
 import os
 from config import settings
+from web_collector.scrapper.scrappy_db import RECORD_TYPE as RECORD_TYPE
+
+RECORD_TYPE_GQL = graphene.Enum.from_enum(RECORD_TYPE)
 
 if os.environ.get("DEVELOPMENT"):
     homes_collection_name = "homes_dev"
 else:
     homes_collection_name = "homes"
 
+class SomeEnumSchema(graphene.Enum):
+    NEW_RECORD = "NEW_RECORD"
+    CANDIDATE = "CANDIDATE"
+    NOT_CANDIDATE = "NOT_CANDIDATE"
+    ARCHIVED = "ARCHIVED"
 
 class Home(ObjectType):
     id = String()
@@ -25,7 +33,7 @@ class Home(ObjectType):
     image = String()
     archived = Int()
     comments = String()
-    type = String()
+    type = SomeEnumSchema()
 
     def __init__(self, homes_dict, ident):
         self.id = ident
@@ -67,6 +75,26 @@ class Home(ObjectType):
         return f"{self.type}"
 
 
+class UpdateType(Mutation):
+    class Arguments:
+        ident = String()
+        type = String()
+
+    home = graphene.Field(Home)
+
+    def mutate(self, info, ident, type):
+        doc_ref = db_firestore.get_document_ref(settings.collections.homes, ident)
+        doc = doc_ref.get()
+        if doc.exists:
+            db_firestore.update_document(doc_ref, {"type": type})
+            home_dict = doc.to_dict()
+            home = Home(home_dict, ident)
+        else:
+            home = None
+
+        return UpdateComment(home=home)
+
+
 class UpdateComment(Mutation):
     class Arguments:
         ident = String()
@@ -88,6 +116,7 @@ class UpdateComment(Mutation):
 
 class Mutation(ObjectType):
     update_comment = UpdateComment.Field()
+    update_type = UpdateType.Field()
 
 
 class Query(ObjectType):

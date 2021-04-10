@@ -16,11 +16,11 @@ from flask import jsonify
 import web_collector.db_firestore as db_firestore
 import json
 
-sentry_sdk.init(
-    dsn=settings.sentry.dsn,
-    integrations=[FlaskIntegration(), SqlalchemyIntegration()],
-    traces_sample_rate=1.0,
-)
+#sentry_sdk.init(
+#   dsn=settings.sentry.dsn,
+#   integrations=[FlaskIntegration(), SqlalchemyIntegration()],
+#   traces_sample_rate=1.0,
+#)
 
 cors = CORS(app)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})

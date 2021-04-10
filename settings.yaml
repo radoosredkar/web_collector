@@ -3,6 +3,7 @@ db:
   path: migrations/
   user: root
   url: mysql://root:SETPWS@db:3306/db?charset=utf8
+  age_to_archive_days: 5
 sentry:
 #Senty dns has to be updated
   dsn: "https://999999999999999999999@o371271.ingest.sentry.io/888888"

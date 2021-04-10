@@ -15,8 +15,12 @@ else:
     db = firestore.client()
 
 
+def get_collection(collection_name):
+    app.logger.info(collection_name)
+    return db.collection(collection_name).stream()
+
 def get_document_ref(collection_name, doc_id):
-    app.logger.info(collection_name, doc_id)
+    app.logger.info("%s %s", collection_name, doc_id)
     doc_ref = db.collection(collection_name).document(f"{doc_id}")
     return doc_ref
 
@@ -28,9 +32,9 @@ def insert_document(doc_ref, json_data):
 
 
 def update_document(doc_ref, field_dict:dict):
-    app.logger.info(f"Updating document to {doc_ref}")
-    app.logger.info(f"Document {field_dict}")
+    app.logger.info(f"Updating document {doc_ref}")
     if doc_ref.get().exists:
+        app.logger.info(f"Applying updates {field_dict}")
         doc_ref.update(field_dict)
     else:
         raise FileNotFoundError(f"Document not found")
