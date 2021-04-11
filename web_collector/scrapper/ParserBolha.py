@@ -77,12 +77,12 @@ def scrapp(url: str):
         stop_element = soup.find(class_="brdr_top ad_item")
         if not stop_element:
             all_items = soup.find_all(class_="EntityList-item")
-            app.logger.debug(f"{len(all_items)} items found")
+            #app.logger.debug(f"{len(all_items)} items found")
             for item in all_items:
                 #statsd.increment("example_metric.increment", tags=["environment:bolha"])
                 parser: Parser = Parser(item)
                 if parser.title and parser.desc:
-                    app.logger.debug(f" {parser} item found.")
+                    #app.logger.debug(f" {parser} item found.")
                     if db.db_add(parser):
                         app.logger.info(f"New record added {parser}")
                         #statsd.increment(

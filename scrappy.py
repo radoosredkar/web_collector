@@ -52,7 +52,7 @@ def refresh():
             )
 
     app.logger.info(f"Refresh finished {str(all_changed_items)}")
-    return 0
+    return all_changed_items
 
 
 if __name__ == "__main__":

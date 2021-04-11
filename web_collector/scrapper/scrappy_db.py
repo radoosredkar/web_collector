@@ -9,7 +9,7 @@ from enum import Enum
 
 sesson = None
 
-RECORD_TYPE = Enum("RECORD_TYPE", "NEW_RECORD CANDIDATE NOT_CANDIDATE ARCHIVED")
+RECORD_TYPE = Enum("RECORD_TYPE", "NEW_RECORD CANDIDATE FAVORITES NOT_CANDIDATE ARCHIVED")
 
 
 def db_add(item):
@@ -24,11 +24,13 @@ def db_add(item):
 
     to_log = (title, web_id, price, source, date_created, image, adv_url)
 
-    app.logger.debug("working with record %s", to_log)
+    #app.logger.debug("working with record %s", to_log)
+    #app.logger.debug("working with record id %s", web_id)
 
     doc_ref = db_firestore.get_document_ref(settings.collections.homes, web_id)
     doc = doc_ref.get()
     if not doc.exists:
+        app.logger.debug("New record found %s", to_log)
         db_firestore.insert_document(
             doc_ref,
             {
@@ -51,9 +53,10 @@ def db_add(item):
             "date_found": datetime.now(),
         }
         # change type only if new record
-        if doc.get("type") == RECORD_TYPE.NEW_RECORD.name:
-            data_to_update["type"] = RECORD_TYPE.CANDIDATE.name
-
+        record_type = doc.get("type")
+        #if record_type == RECORD_TYPE.NEW_RECORD.name:
+        #    app.logger.info("Changing NEW_RECORD to CANDIDATE")
+        #    data_to_update["type"] = RECORD_TYPE.CANDIDATE.name
         db_firestore.update_document(doc_ref, data_to_update)
         return False  # Did not add
 

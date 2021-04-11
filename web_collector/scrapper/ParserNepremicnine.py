@@ -72,14 +72,14 @@ def scrapp(url:str):
         page: requests.models.Response = requests.get(
             url.format(page=pageNum)
         )
-        app.logger.debug(url.format(page=pageNum))
+        #app.logger.debug(url.format(page=pageNum))
         soup: bs4.BeautifulSoup = BeautifulSoup(
             page.content, "html.parser", from_encoding="utf-8"
         )
         all_items = soup.find_all(class_="oglas_container")
         if not all_items:
             break
-        app.logger.info(f"{len(all_items)} items found")
+        #app.logger.info(f"{len(all_items)} items found")
         for item in all_items:
             #statsd.increment('example_metric.increment', tags=["environment:nepremicnine"])
             parser: Parser = Parser(item)

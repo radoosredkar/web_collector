@@ -18,6 +18,7 @@ else:
 class SomeEnumSchema(graphene.Enum):
     NEW_RECORD = "NEW_RECORD"
     CANDIDATE = "CANDIDATE"
+    FAVORITES = "FAVORITES"
     NOT_CANDIDATE = "NOT_CANDIDATE"
     ARCHIVED = "ARCHIVED"
 
