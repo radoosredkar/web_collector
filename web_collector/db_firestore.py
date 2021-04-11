@@ -34,7 +34,7 @@ def insert_document(doc_ref, json_data):
 def update_document(doc_ref, field_dict:dict):
     #app.logger.debug(f"Updating document {doc_ref}")
     if doc_ref.get().exists:
-        #app.logger.info(f"Applying updates {field_dict}")
+        app.logger.info(f"Applying updates {field_dict}")
         doc_ref.update(field_dict)
     else:
         raise FileNotFoundError(f"Document not found")
