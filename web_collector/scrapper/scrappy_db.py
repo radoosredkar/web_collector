@@ -50,13 +50,9 @@ def db_add(item):
         return True
     else:
         data_to_update = {
-            "date_found": datetime.now(),
+            "date_found": datetime.now()
         }
         # change type only if new record
-        record_type = doc.get("type")
-        #if record_type == RECORD_TYPE.NEW_RECORD.name:
-        #    app.logger.info("Changing NEW_RECORD to CANDIDATE")
-        #    data_to_update["type"] = RECORD_TYPE.CANDIDATE.name
         db_firestore.update_document(doc_ref, data_to_update)
         return False  # Did not add
 
