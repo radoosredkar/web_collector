@@ -45,11 +45,11 @@ def refresh():
         parsed = home.to_dict()
         timedelta = now - parsed["date_found"].replace(tzinfo=None)
         # app.logger.info("timedelta %s,%s", timedelta.days, settings.db.age_to_archive_days)
-        #if timedelta.days > settings.db.age_to_archive_days:
-        #    app.logger.debug("Archieving document with timedelta %s", timedelta)
-        #    db_firestore.update_document(
-        #        home.reference, {"type": RECORD_TYPE.ARCHIVED.name}
-        #    )
+        if timedelta.days > settings.db.age_to_archive_days:
+            app.logger.debug("Archieving document with timedelta %s", timedelta)
+            db_firestore.update_document(
+                home.reference, {"type": RECORD_TYPE.ARCHIVED.name}
+            )
 
     app.logger.info(f"Refresh finished {str(all_changed_items)}")
     return all_changed_items

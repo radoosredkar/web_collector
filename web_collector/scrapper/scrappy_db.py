@@ -52,8 +52,7 @@ def db_add(item):
         data_to_update = {
             "date_found": datetime.now()
         }
-        # change type only if new record
-        #db_firestore.update_document(doc_ref, data_to_update)
+        db_firestore.update_document(doc_ref, data_to_update)
         return False  # Did not add
 
 
