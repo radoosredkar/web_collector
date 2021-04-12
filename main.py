@@ -51,7 +51,7 @@ def update(record_id):
     doc_ref = db_firestore.get_document_ref(settings.collections.homes, record_id)
     app.logger.info(doc_ref)
     if request.method == "PATCH":
-        db_firestore.update_document(doc_ref, {"type": str(request.form["type"])})
+        db_firestore.update_document(doc_ref, request.form)
         document = doc_ref.get()
         response = flask.jsonify(document.to_dict())
         app.logger.info(response)
