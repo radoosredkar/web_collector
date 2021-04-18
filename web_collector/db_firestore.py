@@ -1,4 +1,5 @@
 from app import app
+import datetime
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
@@ -38,3 +39,9 @@ def update_document(doc_ref, field_dict:dict):
         doc_ref.update(field_dict)
     else:
         raise FileNotFoundError(f"Document not found")
+
+def get_latest_refresh(collection_name):
+    app.logger.info(collection_name)
+    result_stream = db.collection(collection_name).order_by('datetime', direction='DESCENDING').limit(1).stream();
+    result_date = next(result_stream).to_dict()
+    return result_date

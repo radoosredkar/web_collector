@@ -2,7 +2,6 @@
 Finding apartments of intrest on various web sources
 
 TODO:
-- Add parameter who triggered refresh
 - Is it safe to injec secrets to env on build?
 - check redis sessions
 - check wierd reporting of found new records for nepremicnine
@@ -12,6 +11,8 @@ TODO:
 IN PROGRESS
 
 DONE
+- Add time of latest refresh
+- Add parameter who triggered refresh
 - Adding comment api
 - generalize both scrappers
 - add add to favorites and favorites filter
