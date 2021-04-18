@@ -63,10 +63,11 @@ def update(record_id):
     return f"{record_id} {request.get_data()} {request.method}"
 
 
-@app.route("/refresh")
+@app.route("/refresh", defaults={'client':'url'})
+@app.route("/refresh/<client>")
 @cross_origin()
-def refresh():
-    all_changed_items = scrappy.refresh()
+def refresh(client):
+    all_changed_items = scrappy.refresh(client)
     # return {"all_changed_item": scrappy.refresh()}
     app.logger.info(f"Refresh finished {all_changed_items}")
     return {"all_changed_items": all_changed_items}
