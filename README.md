@@ -2,21 +2,22 @@
 Finding apartments of intrest on various web sources
 
 TODO:
+- Add parameter who triggered refresh
 - Is it safe to injec secrets to env on build?
 - check redis sessions
-- add cleaning of records, or better archieving
 - check wierd reporting of found new records for nepremicnine
-- generalize both scrappers
-- add filter changing (now it is fixed)
-- add add to favorites and favorites filter
 - add apartment size to the datamodel
-- add enable and desable archieving
-- add manual move to and from archive
+- add enable and disable archieving
 
 IN PROGRESS
-- Adding comment api
 
 DONE
+- Adding comment api
+- generalize both scrappers
+- add add to favorites and favorites filter
+- add manual move to and from archive
+- add filter changing (now it is fixed) (not needed)
+- add cleaning of records, or better archieving
 - deploy to some cloud infrastructire, preferablly AWS (gcp was chosen)
 - Extract secrets and find a way to inject them
 - Move to MySql
