@@ -19,13 +19,13 @@ url_bolha = "https://www.bolha.com/index.php?ctl=search_ads&keywords=stanovanja&
 url_nepremicnine = "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-okolica/stanovanje/cena-od-100000-do-200000-eur,velikost-od-50-do-100-m2/{page}/"
 
 
-def refresh():
+def refresh(client):
     now = datetime.now()
     document_id = now.strftime("%Y%m%d-%H%M%S") + str(randrange(10000, 99999))
 
     doc_ref = db_firestore.get_document_ref(settings.collections.logs, document_id)
 
-    document = {"action": "refresh", "datetime": now}
+    document = {"action": "refresh", "datetime": now, "client": client}
     db_firestore.insert_document(doc_ref, document)
 
     app.logger.info("Refresh triggered")
