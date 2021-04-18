@@ -64,7 +64,7 @@ def update(record_id):
 
 @app.route('/latest_refresh')
 def latest_refresh():
-    return  flask.jsonify(db_firestore.get_latest_refresh('homes_logs_dev'))
+    return  flask.jsonify(db_firestore.get_latest_refresh(settings.collections.logs))
 
 @app.route("/refresh", defaults={'client':'url'})
 @app.route("/refresh/<client>")
