@@ -6,6 +6,7 @@ from web_collector.db_firestore import db
 from config import settings
 import web_collector.db_firestore as db_firestore
 from web_collector.scrapper.scrappy_db import RECORD_TYPE as RECORD_TYPE
+import push
 
 from datetime import datetime
 from random import randrange
@@ -16,7 +17,7 @@ from random import randrange
 
 url_bolha = "https://www.bolha.com/index.php?ctl=search_ads&keywords=stanovanja&categoryId=9580&price[min]=98000&price[max]=200000&level0LocationId%5B26320%5D=26320&sort=new&page={page}"
 
-url_nepremicnine = "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-okolica/stanovanje/cena-od-100000-do-200000-eur,velikost-od-50-do-100-m2/{page}/"
+url_nepremicnine = "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-okolica/stanovanje/cena-od-100000-do-200000-eur,velikost-od-50-do-150-m2/{page}/"
 
 
 def refresh(client):
@@ -52,6 +53,8 @@ def refresh(client):
             )
 
     app.logger.info(f"Refresh finished {str(all_changed_items)}")
+    if all_changed_items > 0:
+        push.push(f"{all_changed_items} found!")
     return all_changed_items
 
 
