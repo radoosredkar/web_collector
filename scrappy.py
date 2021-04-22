@@ -54,6 +54,7 @@ def refresh(client):
 
     app.logger.info(f"Refresh finished {str(all_changed_items)}")
     if all_changed_items > 0:
+        app.logger.info("Sending push notification")
         push.push(f"{all_changed_items} found!")
     return all_changed_items
 
