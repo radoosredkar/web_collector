@@ -4,13 +4,13 @@ Finding apartments of intrest on various web sources
 TODO:
 - Is it safe to injec secrets to env on build?
 - check redis sessions
-- check wierd reporting of found new records for nepremicnine
 - add apartment size to the datamodel
 - add enable and disable archieving
 
 IN PROGRESS
 
 DONE
+- check wierd reporting of found new records for nepremicnine
 - Add time of latest refresh
 - Add parameter who triggered refresh
 - Adding comment api
