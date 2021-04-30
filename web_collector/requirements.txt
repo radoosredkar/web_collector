@@ -1,7 +1,7 @@
 alembic==1.4.2
 aniso8601==7.0.0
 backcall==0.2.0
-beautifulsoup4==4.9.1
+beautifulsoup4==4.9.3
 blinker==1.4
 CacheControl==0.12.6
 cachetools==4.2.1
