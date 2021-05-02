@@ -24,7 +24,9 @@ def refresh(client):
     now = datetime.now()
     document_id = now.strftime("%Y%m%d-%H%M%S") + str(randrange(10000, 99999))
 
-    doc_ref = db_firestore.get_document_ref(settings.collections.logs, document_id)
+    doc_ref = db_firestore.get_document_ref(
+        settings.collections.logs, "refresh_" + document_id
+    )
 
     document = {"action": "refresh", "datetime": now, "client": client}
     db_firestore.insert_document(doc_ref, document)
@@ -41,22 +43,44 @@ def refresh(client):
     app.logger.debug(f"Nepremicnine refreshed {all_changed_items}")
 
     db_firestore.update_document(doc_ref, {"changed_items": all_changed_items})
-    homes_coll = db_firestore.get_collection(settings.collections.homes)
-    for home in homes_coll:
-        parsed = home.to_dict()
-        timedelta = now - parsed["date_found"].replace(tzinfo=None)
-        # app.logger.info("timedelta %s,%s", timedelta.days, settings.db.age_to_archive_days)
-        if timedelta.days > settings.db.age_to_archive_days:
-            app.logger.debug("Archieving document with timedelta %s", timedelta)
-            db_firestore.update_document(
-                home.reference, {"type": RECORD_TYPE.ARCHIVED.name}
-            )
 
     app.logger.info(f"Refresh finished {str(all_changed_items)}")
     if all_changed_items > 0:
         app.logger.info("Sending push notification")
         push.push(f"{all_changed_items} found!")
     return all_changed_items
+
+
+def archieve():
+    all_archieved_items = 0
+    now = datetime.now()
+    document_id = now.strftime("%Y%m%d-%H%M%S") + str(randrange(10000, 99999))
+
+    homes_coll = db_firestore.get_collection(settings.collections.homes)
+
+    doc_ref = db_firestore.get_document_ref(
+        settings.collections.logs, "archieve_" + document_id
+    )
+    document = {"action": "archieve", "datetime": now}
+    db_firestore.insert_document(doc_ref, document)
+
+    app.logger.debug("Checking for documents to archieve")
+    for home in homes_coll:
+        parsed = home.to_dict()
+        timedelta = now - parsed["date_found"].replace(tzinfo=None)
+        # app.logger.info("timedelta %s,%s", timedelta.days, settings.db.age_to_archive_days)
+        if (
+            timedelta.days > settings.db.age_to_archive_days
+            and parsed["type"] != RECORD_TYPE.ARCHIVED.name
+        ):
+            app.logger.debug("Archieving document with timedelta %s", timedelta)
+            db_firestore.update_document(
+                home.reference, {"type": RECORD_TYPE.ARCHIVED.name}
+            )
+            all_archieved_items = all_archieved_items + 1
+    db_firestore.update_document(doc_ref, {"archieved_items": all_archieved_items})
+    app.logger.debug(f"Archieved {all_archieved_items} documents")
+    return all_archieved_items
 
 
 if __name__ == "__main__":

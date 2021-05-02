@@ -75,6 +75,13 @@ def refresh(client):
     app.logger.info(f"Refresh finished {all_changed_items}")
     return {"all_changed_items": all_changed_items}
 
+@app.route("/archieve")
+@cross_origin()
+def archieve():
+    all_changed_items = scrappy.archieve()
+    app.logger.info(f"Refresh finished {all_changed_items}")
+    return {"all_changed_items": all_changed_items}
+
 
 if __name__ == "__main__":
     # app.logging.getLogger("flask_cors").level = app.logging.DEBUG
