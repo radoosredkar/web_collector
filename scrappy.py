@@ -82,7 +82,7 @@ def archieve():
         ):
             app.logger.debug("Archieving document with timedelta %s", timedelta)
             db_firestore.update_document(
-                home.reference, {"type": RECORD_TYPE.ARCHIVED.name}
+                home.reference, {"type": RECORD_TYPE.ARCHIVED.name, "archieved": now}
             )
             all_archieved_items = all_archieved_items + 1
         elif timedelta.days > 10 and parsed["type"] == RECORD_TYPE.ARCHIVED.name:

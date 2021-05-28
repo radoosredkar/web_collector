@@ -48,7 +48,7 @@ def delete_document(doc_ref):
         app.logger.debug("Deleting document")
         doc_ref.delete()
     else:
-        raise FileNotFoundError(f"Document not found")
+        raise FileNotFoundError("Document not found")
 
 def get_latest_refresh(collection_name):
     app.logger.info(collection_name)
