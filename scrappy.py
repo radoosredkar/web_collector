@@ -15,9 +15,14 @@ from random import randrange
 # import sentry_sdk
 # sentry_sdk.init("https://007e055e5fe64e35b55b36140bf6b18d@o371271.ingest.sentry.io/5363923")
 
-url_bolha = "https://www.bolha.com/index.php?ctl=search_ads&keywords=stanovanja&categoryId=9580&price[min]=98000&price[max]=200000&level0LocationId%5B26320%5D=26320&sort=new&page={page}"
+url_bolha = [
+    "https://www.bolha.com/index.php?ctl=search_ads&keywords=stanovanja&categoryId=9580&price[min]=98000&price[max]=200000&level0LocationId%5B26320%5D=26320&sort=new&page={page}",
+]
 
-url_nepremicnine = "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-okolica/stanovanje/cena-od-100000-do-200000-eur,velikost-od-50-do-150-m2/{page}/"
+url_nepremicnine = [
+    "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-mesto/stanovanje/cena-do-200000-eur,velikost-od-50-do-100-m2/{page}/",
+    "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-okolica/stanovanje/cena-od-100000-do-200000-eur,velikost-od-50-do-150-m2/{page}/",
+]
 
 
 def refresh(client):
@@ -35,11 +40,15 @@ def refresh(client):
 
     all_changed_items = 0
     app.logger.info("Refreshing bolha")
-    all_changed_items = all_changed_items + bolha.scrapp(url_bolha)
+    for url in url_bolha:
+        app.logger.info(f"Applying filter {url}")
+        all_changed_items = all_changed_items + bolha.scrapp(url)
     app.logger.debug(f"Bolha refreshed {all_changed_items}")
 
     app.logger.info("Refreshing nepremicnine")
-    all_changed_items = all_changed_items + nepremicnine.scrapp(url_nepremicnine)
+    for url in url_nepremicnine:
+        app.logger.info(f"Applying filter {url}")
+        all_changed_items = all_changed_items + nepremicnine.scrapp(url)
     app.logger.debug(f"Nepremicnine refreshed {all_changed_items}")
 
     db_firestore.update_document(doc_ref, {"changed_items": all_changed_items})
