@@ -87,9 +87,7 @@ def archieve():
             all_archieved_items = all_archieved_items + 1
         elif timedelta.days > 10 and parsed["type"] == RECORD_TYPE.ARCHIVED.name:
             app.logger.debug("Deleting document with timedelta %s", timedelta)
-            db_firestore.delete_document(
-                home.reference, {"type": RECORD_TYPE.ARCHIVED.name}
-            )
+            db_firestore.delete_document(home.reference)
             all_deleted_items = all_deleted_items + 1
             # delete from collection
     db_firestore.update_document(
