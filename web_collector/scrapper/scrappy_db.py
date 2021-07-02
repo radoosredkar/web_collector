@@ -9,14 +9,19 @@ from enum import Enum
 
 sesson = None
 
-RECORD_TYPE = Enum("RECORD_TYPE", "NEW_RECORD CANDIDATE FAVORITES NOT_CANDIDATE ARCHIVED")
+RECORD_TYPE = Enum(
+    "RECORD_TYPE", "NEW_RECORD CANDIDATE FAVORITES NOT_CANDIDATE ARCHIVED"
+)
 
 
 def db_add(item):
     title = item.title
     desc = item.desc
     web_id = item.web_id
-    price = float(item.price.replace("€", "").replace(".", "").replace(",", "."))
+    if item and item.price:
+        price = float(item.price.replace("€", "").replace(".", "").replace(",", "."))
+    else:
+        price = 0
     source = item.source
     date_created = item.date_created
     image = item.image
@@ -24,8 +29,8 @@ def db_add(item):
 
     to_log = (title, web_id, price, source, date_created, image, adv_url)
 
-    #app.logger.debug("working with record %s", to_log)
-    #app.logger.debug("working with record id %s", web_id)
+    # app.logger.debug("working with record %s", to_log)
+    # app.logger.debug("working with record id %s", web_id)
 
     doc_ref = db_firestore.get_document_ref(settings.collections.homes, web_id)
     doc = doc_ref.get()
@@ -49,9 +54,7 @@ def db_add(item):
         )
         return True
     else:
-        data_to_update = {
-            "date_found": datetime.now()
-        }
+        data_to_update = {"date_found": datetime.now()}
         db_firestore.update_document(doc_ref, data_to_update)
         return False  # Did not add
 
