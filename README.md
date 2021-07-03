@@ -2,7 +2,6 @@
 Finding apartments of intrest on various web sources
 
 TODO:
-- Add refrest logs per day, per hour shoud be in rows only
 - Is it safe to injec secrets to env on build?
 - check redis sessions
 - add apartment size to the datamodel
@@ -11,6 +10,7 @@ TODO:
 IN PROGRESS
 
 DONE
+- Add refrest logs per day, per hour shoud be in rows only
 - check wierd reporting of found new records for nepremicnine
 - Add time of latest refresh
 - Add parameter who triggered refresh
