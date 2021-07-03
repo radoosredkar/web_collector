@@ -53,7 +53,7 @@ def refresh(client):
         all_changed_items = all_changed_items + nepremicnine.scrapp(url)
     app.logger.debug(f"Nepremicnine refreshed {all_changed_items}")
 
-    db_firestore.update_document(doc_ref, {"changed_items": all_changed_items})
+    db_firestore.update_document(doc_ref, {entry_id:{"changed_items": all_changed_items}})
 
     app.logger.info(f"Refresh finished {str(all_changed_items)}")
     if all_changed_items > 0:
