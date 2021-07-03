@@ -24,14 +24,19 @@ URL_NEPREMICNINE = [
 
 def refresh(client):
     now = datetime.now()
-    document_id = now.strftime("%Y%m%d-%H%M%S") + str(randrange(10000, 99999))
+    document_id = now.strftime("%Y%m%d")
+    entry_id = now.strftime("%H%M%S")
 
     doc_ref = db_firestore.get_document_ref(
         settings.collections.logs, "refresh_" + document_id
     )
-
-    document = {"action": "refresh", "datetime": now, "client": client}
-    db_firestore.insert_document(doc_ref, document)
+    doc = doc_ref.get()
+    if not doc.exists:
+        document = {entry_id: {"action": "refresh", "datetime": now, "client": client}}
+        db_firestore.insert_document(doc_ref, document)
+    else:
+        document = {entry_id: {"action": "refresh", "datetime": now, "client": client}}
+        db_firestore.update_document(doc_ref, document)
 
     app.logger.info("Refresh triggered")
 
@@ -61,15 +66,22 @@ def archieve():
     all_archieved_items = 0
     all_deleted_items = 0
     now = datetime.now()
-    document_id = now.strftime("%Y%m%d-%H%M%S") + str(randrange(10000, 99999))
+
+    document_id = now.strftime("%Y%m%d")
+    entry_id = now.strftime("%H%M%S")
 
     homes_coll = db_firestore.get_collection(settings.collections.homes)
 
     doc_ref = db_firestore.get_document_ref(
         settings.collections.logs, "archieve_" + document_id
     )
-    document = {"action": "archieve", "datetime": now}
-    db_firestore.insert_document(doc_ref, document)
+    doc = doc_ref.get()
+    if not doc.exists:
+        document = {entry_id: {"action": "archieve", "datetime": now}}
+        db_firestore.insert_document(doc_ref, document)
+    else:
+        document = {"action": "archieve", "datetime": now}
+        db_firestore.insert_document(doc_ref, document)
 
     app.logger.debug("Checking for documents to archieve")
     for home in homes_coll:
