@@ -21,7 +21,7 @@ class ExtractorDesc(object):
                 if self.attr == "web_id":
                     instance.__setattr__(self.attr, (item["id"]))
                 elif self.attr == "price":
-                    instance.__setattr__(self.attr, (item.text.split()[0]))
+                    instance.__setattr__(self.attr, (item.text.split()[0] if item.text else item.text))
                 elif self.attr == "date_created":
                     instance.__setattr__(
                         self.attr, datetime.strptime(item.text, "%d.%m.%Y.")
