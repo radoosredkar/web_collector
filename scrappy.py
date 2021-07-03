@@ -53,7 +53,22 @@ def refresh(client):
         all_changed_items = all_changed_items + nepremicnine.scrapp(url)
     app.logger.debug(f"Nepremicnine refreshed {all_changed_items}")
 
-    db_firestore.update_document(doc_ref, {entry_id:{"changed_items": all_changed_items}})
+    sub_doc_ref = db_firestore.get_document_ref(
+        settings.collections.logs, "refresh_" + document_id
+    )
+
+    # Extremely ugly to update whole document
+    db_firestore.update_document(
+        doc_ref,
+        {
+            entry_id: {
+                "action": "refresh",
+                "datetime": now,
+                "client": client,
+                "changed_items": all_changed_items,
+            }
+        },
+    )
 
     app.logger.info(f"Refresh finished {str(all_changed_items)}")
     if all_changed_items > 0:
@@ -102,9 +117,18 @@ def archieve():
             db_firestore.delete_document(home.reference)
             all_deleted_items = all_deleted_items + 1
             # delete from collection
+
+    # Extremely ugly to update whole document
     db_firestore.update_document(
         doc_ref,
-        {"archieved_items": all_archieved_items, "deleted_items": all_deleted_items},
+        {
+            entry_id: {
+                "action": "archieve",
+                "datetime": now,
+                "archieved_items": all_archieved_items,
+                "deleted_items": all_deleted_items,
+            }
+        },
     )
     app.logger.debug(f"Archieved {all_archieved_items} documents")
     app.logger.debug(f"Deleted {all_deleted_items} documents")
