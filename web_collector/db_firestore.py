@@ -54,9 +54,10 @@ def delete_document(doc_ref):
 def get_latest_refresh(collection_name):
     now = datetime.datetime.now()
     document_id = now.strftime("%Y%m%d")
-    document_id = "20210703"
-    app.logger.info(collection_name)
+    # document_id = "20210703"
+    app.logger.info(f"collection_name: {collection_name}, document_id:{document_id}")
     current_refresh_doc = get_document_ref(collection_name, f"refresh_{document_id}")
+    app.logger.debug(current_refresh_doc.get().to_dict())
     time = list(current_refresh_doc.get().to_dict())[-1]
     return f"{document_id[0:4]}-{document_id[4:6]}-{document_id[6:8]}T{time[0:2]}:{time[2:4]}:{time[4:6]}"
     # result_stream = (
