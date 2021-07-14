@@ -58,10 +58,11 @@ def get_latest_refresh(collection_name):
     app.logger.info(f"collection_name: {collection_name}, document_id:{document_id}")
     current_refresh_doc = get_document_ref(collection_name, f"refresh_{document_id}")
     #app.logger.debug(current_refresh_doc.get().to_dict())
-    time = current_refresh_doc.get().to_dict()
-    if time:
-        list(time).sort()
-        time = time[-1]
+    all_times = current_refresh_doc.get().to_dict()
+    if all_times:
+        all_times=list(all_times)
+        all_times.sort()
+        time = all_times[-1]
         return f"{document_id[0:4]}-{document_id[4:6]}-{document_id[6:8]}T{time[0:2]}:{time[2:4]}:{time[4:6]}"
     # result_stream = (
     # db.collection(collection_name)
