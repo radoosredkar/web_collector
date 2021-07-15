@@ -19,6 +19,7 @@ URL_BOLHA = [
 URL_NEPREMICNINE = [
     "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-mesto/stanovanje/cena-do-200000-eur,velikost-od-50-do-100-m2/{page}/",
     "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-okolica/stanovanje/cena-od-100000-do-200000-eur,velikost-od-50-do-150-m2/{page}/",
+    "https://www.nepremicnine.net/oglasi-prodaja/notranjska/postojna/stanovanje/cena-do-200000-eur/{page}/",
 ]
 
 
@@ -88,14 +89,17 @@ def archieve():
     homes_coll = db_firestore.get_collection(settings.collections.homes)
 
     doc_ref = db_firestore.get_document_ref(
-        settings.collections.logs, "archieve_" + document_id
+        #settings.collections.logs, "archieve_" + document_id
+        settings.collections.logs, "archieve"
     )
     doc = doc_ref.get()
     if not doc.exists:
-        document = {entry_id: {"action": "archieve", "datetime": now}}
+        document = {document_id: {"action": "archieve", "datetime": now}}
         db_firestore.insert_document(doc_ref, document)
     else:
-        document = {"action": "archieve", "datetime": now}
+        #document = {"action": "archieve", "datetime": now}
+        #db_firestore.insert_document(doc_ref, document)
+        document = {document_id: {"action": "archieve", "datetime": now}}
         db_firestore.insert_document(doc_ref, document)
 
     app.logger.debug("Checking for documents to archieve")
@@ -122,7 +126,7 @@ def archieve():
     db_firestore.update_document(
         doc_ref,
         {
-            entry_id: {
+            document_id: {
                 "action": "archieve",
                 "datetime": now,
                 "archieved_items": all_archieved_items,
