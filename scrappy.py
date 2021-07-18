@@ -100,7 +100,7 @@ def archieve():
         #document = {"action": "archieve", "datetime": now}
         #db_firestore.insert_document(doc_ref, document)
         document = {document_id: {"action": "archieve", "datetime": now}}
-        db_firestore.insert_document(doc_ref, document)
+        db_firestore.update_document(doc_ref, document)
 
     app.logger.debug("Checking for documents to archieve")
     for home in homes_coll:
