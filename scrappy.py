@@ -2,6 +2,7 @@ from datetime import datetime
 from random import randrange
 from web_collector.scrapper import ParserBolha as bolha
 from web_collector.scrapper import ParserNepremicnine as nepremicnine
+from web_collector.scrapper import ParserSalomon as salomon
 from flask import current_app as app
 from config import settings
 import web_collector.db_firestore as db_firestore
@@ -20,6 +21,10 @@ URL_NEPREMICNINE = [
     "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-mesto/stanovanje/cena-do-200000-eur,velikost-od-50-do-100-m2/{page}/",
     "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-okolica/stanovanje/cena-od-100000-do-200000-eur,velikost-od-50-do-150-m2/{page}/",
     "https://www.nepremicnine.net/oglasi-prodaja/notranjska/postojna/stanovanje/cena-do-200000-eur/{page}/",
+]
+
+URL_SALOMON = [
+    "http://oglasi.svet24.si/oglasi/nepremicnine?q=&filters=1471s-83851x521s-27647_27648_27649_27650_27651x1472s-90256_85354x438s-26015_26012_26014&onPage=25&priceFrom=&priceTo=200000"
 ]
 
 
@@ -52,6 +57,12 @@ def refresh(client):
     for url in URL_NEPREMICNINE:
         app.logger.info(f"Applying filter {url}")
         all_changed_items = all_changed_items + nepremicnine.scrapp(url)
+    app.logger.debug(f"Nepremicnine refreshed {all_changed_items}")
+
+    app.logger.info("Refreshing salomon")
+    for url in URL_SALOMON:
+        app.logger.info(f"Applying filter {url}")
+        all_changed_items = all_changed_items + salomon.scrapp(url)
     app.logger.debug(f"Nepremicnine refreshed {all_changed_items}")
 
     sub_doc_ref = db_firestore.get_document_ref(
@@ -89,16 +100,17 @@ def archieve():
     homes_coll = db_firestore.get_collection(settings.collections.homes)
 
     doc_ref = db_firestore.get_document_ref(
-        #settings.collections.logs, "archieve_" + document_id
-        settings.collections.logs, "archieve"
+        # settings.collections.logs, "archieve_" + document_id
+        settings.collections.logs,
+        "archieve",
     )
     doc = doc_ref.get()
     if not doc.exists:
         document = {document_id: {"action": "archieve", "datetime": now}}
         db_firestore.insert_document(doc_ref, document)
     else:
-        #document = {"action": "archieve", "datetime": now}
-        #db_firestore.insert_document(doc_ref, document)
+        # document = {"action": "archieve", "datetime": now}
+        # db_firestore.insert_document(doc_ref, document)
         document = {document_id: {"action": "archieve", "datetime": now}}
         db_firestore.update_document(doc_ref, document)
 
