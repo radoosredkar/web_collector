@@ -22,7 +22,7 @@ URL_NEPREMICNINE = [
     "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-mesto/stanovanje/cena-do-220000-eur,velikost-od-100-do-150-m2/{page}/",
     "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-okolica/stanovanje/cena-do-220000-eur,velikost-od-50-do-100-m2/{page}/",
     "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-okolica/stanovanje/cena-do-220000-eur,velikost-od-100-do-150-m2/{page}/",
-    "https://www.nepremicnine.net/oglasi-prodaja/notranjska/postojna/stanovanje/cena-do-200000-eur/{page}/",
+    "https://www.nepremicnine.net/oglasi-prodaja/notranjska/postojna/stanovanje/cena-do-220000-eur/{page}/",
 ]
 
 URL_SALOMON = [
