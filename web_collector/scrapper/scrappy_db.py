@@ -5,7 +5,6 @@ import web_collector.db_firestore as db_firestore
 import os
 from config import settings
 from enum import Enum
-import traceback
 
 
 sesson = None
@@ -20,13 +19,7 @@ def db_add(item):
     desc = item.desc
     web_id = item.web_id
     if item and item.price:
-        try:
-            price = float(
-                item.price.replace("€", "").replace(".", "").replace(",", ".")
-            )
-        except Exception as e:
-            app.logger.error(traceback.format_exc())
-            price = 0
+        price = float(item.price.replace("€", "").replace(".", "").replace(",", "."))
     else:
         price = 0
     source = item.source

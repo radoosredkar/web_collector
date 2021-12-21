@@ -15,14 +15,12 @@ if os.environ.get("DEVELOPMENT"):
 else:
     homes_collection_name = "homes"
 
-
 class SomeEnumSchema(graphene.Enum):
     NEW_RECORD = "NEW_RECORD"
     CANDIDATE = "CANDIDATE"
     FAVORITES = "FAVORITES"
     NOT_CANDIDATE = "NOT_CANDIDATE"
     ARCHIVED = "ARCHIVED"
-
 
 class Home(ObjectType):
     id = String()
