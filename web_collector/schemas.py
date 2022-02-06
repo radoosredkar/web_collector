@@ -15,12 +15,14 @@ if os.environ.get("DEVELOPMENT"):
 else:
     homes_collection_name = "homes"
 
+
 class SomeEnumSchema(graphene.Enum):
     NEW_RECORD = "NEW_RECORD"
     CANDIDATE = "CANDIDATE"
     FAVORITES = "FAVORITES"
     NOT_CANDIDATE = "NOT_CANDIDATE"
     ARCHIVED = "ARCHIVED"
+
 
 class Home(ObjectType):
     id = String()
@@ -73,7 +75,7 @@ class Home(ObjectType):
         return f"{self.comments}"
 
     def resolve_type(self, info):
-        return f"{self.type}"
+        return f"{self.type if self.type !='' else 'CANDIDATE'}"
 
 
 class UpdateType(Mutation):
