@@ -19,7 +19,12 @@ def db_add(item):
     desc = item.desc
     web_id = item.web_id
     if item and item.price:
-        price = float(item.price.replace("€", "").replace(".", "").replace(",", "."))
+        try:
+            price = float(
+                item.price.replace("€", "").replace(".", "").replace(",", ".")
+            )
+        except:
+            price = 0
     else:
         price = 0
     source = item.source
@@ -66,7 +71,10 @@ def db_add_sql(item):
     title = item.title
     desc = item.desc
     web_id = item.web_id
-    price = float(item.price.replace("€", "").replace(".", "").replace(",", "."))
+    try:
+        price = float(item.price.replace("€", "").replace(".", "").replace(",", "."))
+    except:
+        price = 0
     source = item.source
     date_created = item.date_created
     image = item.image
