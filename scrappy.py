@@ -14,20 +14,20 @@ import push
 # sentry_sdk.init("https://007e055e5fe64e35b55b36140bf6b18d@o371271.ingest.sentry.io/5363923")
 
 URL_BOLHA = [
-    "https://www.bolha.com/?ctl=search_ads&keywords=stanovanja&categoryId=9580&price%5Bmin%5D=80000&price%5Bmax%5D=220000&geo%5BlocationIds%5D=26320%2C26316%2C26321&sort=new&page={page}",
+    "https://www.bolha.com/?ctl=search_ads&keywords=stanovanja&categoryId=9580&price%5Bmin%5D=80000&price%5Bmax%5D=250000&geo%5BlocationIds%5D=26320%2C26316%2C26321&sort=new&page={page}",
 ]
 
 URL_NEPREMICNINE = [
-    "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-mesto/stanovanje/cena-do-220000-eur,velikost-od-50-do-100-m2/{page}/",
-    "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-mesto/stanovanje/cena-do-220000-eur,velikost-od-100-do-150-m2/{page}/",
-    "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-okolica/stanovanje/cena-do-220000-eur,velikost-od-50-do-100-m2/{page}/",
-    "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-okolica/stanovanje/cena-do-220000-eur,velikost-od-100-do-150-m2/{page}/",
-    "https://www.nepremicnine.net/oglasi-prodaja/notranjska/postojna/stanovanje/cena-do-220000-eur/{page}/",
+    "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-mesto/stanovanje/cena-do-250000-eur,velikost-od-50-do-100-m2/{page}/",
+    "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-mesto/stanovanje/cena-do-250000-eur,velikost-od-100-do-150-m2/{page}/",
+    "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-okolica/stanovanje/cena-do-250000-eur,velikost-od-50-do-100-m2/{page}/",
+    "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-okolica/stanovanje/cena-do-250000-eur,velikost-od-100-do-150-m2/{page}/",
+    "https://www.nepremicnine.net/oglasi-prodaja/notranjska/postojna/stanovanje/cena-do-250000-eur/{page}/",
     "https://www.nepremicnine.net/oglasi-prodaja/juzna-primorska/sezana/stanovanje/{page}/"
 ]
 
 URL_SALOMON = [
-    "http://oglasi.svet24.si/oglasi/nepremicnine?q=&filters=1471s-83851x521s-27647_27648_27649_27650_27651x1472s-90256_85354x438s-26015_26012_26014&onPage=25&priceFrom=&priceTo=220000"
+    "http://oglasi.svet24.si/oglasi/nepremicnine?q=&filters=1471s-83851x521s-27647_27648_27649_27650_27651x1472s-90256_85354x438s-26015_26012_26014&onPage=25&priceFrom=&priceTo=250000"
 ]
 
 
