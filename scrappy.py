@@ -15,6 +15,8 @@ import push
 
 URL_BOLHA = [
     "https://www.bolha.com/?ctl=search_ads&keywords=stanovanja&categoryId=9580&price%5Bmin%5D=80000&price%5Bmax%5D=250000&geo%5BlocationIds%5D=26320%2C26316%2C26321&sort=new&page={page}",
+    "https://www.bolha.com/?ctl=search_ads&keywords=hisa&categoryId=9580&price%5Bmin%5D=80000&price%5Bmax%5D=250000&geo%5BlocationIds%5D=26320%2C26316%2C26321&sort=new&page={page}",
+     "https://www.bolha.com/oddaja-stanovanja?geo%5BlocationIds%5D=26320%2C26316&page={page}",
 ]
 
 URL_NEPREMICNINE = [
@@ -23,7 +25,15 @@ URL_NEPREMICNINE = [
     "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-okolica/stanovanje/cena-do-250000-eur,velikost-od-50-do-100-m2/{page}/",
     "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-okolica/stanovanje/cena-do-250000-eur,velikost-od-100-do-150-m2/{page}/",
     "https://www.nepremicnine.net/oglasi-prodaja/notranjska/postojna/stanovanje/cena-do-250000-eur/{page}/",
-    "https://www.nepremicnine.net/oglasi-prodaja/juzna-primorska/sezana/stanovanje/{page}/"
+    "https://www.nepremicnine.net/oglasi-prodaja/juzna-primorska/sezana/stanovanje/{page}/",
+    "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-mesto/hisa/cena-do-250000-eur,velikost-od-50-do-100-m2/{page}/",
+    "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-mesto/hisa/cena-do-250000-eur,velikost-od-100-do-150-m2/{page}/",
+    "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-okolica/hisa/cena-do-250000-eur,velikost-od-50-do-100-m2/{page}/",
+    "https://www.nepremicnine.net/oglasi-prodaja/ljubljana-okolica/hisa/cena-do-250000-eur,velikost-od-100-do-150-m2/{page}/",
+    "https://www.nepremicnine.net/oglasi-prodaja/notranjska/postojna/hisa/cena-do-250000-eur/{page}/",
+    "https://www.nepremicnine.net/oglasi-prodaja/juzna-primorska/sezana/hisa/{page}/"
+    "https://www.nepremicnine.net/oglasi-oddaja/ljubljana-okolica/stanovanje/{page}/?s=16",
+    "https://www.nepremicnine.net/oglasi-oddaja/notranjska/stanovanje/{page}/?s=16",
 ]
 
 URL_SALOMON = [
